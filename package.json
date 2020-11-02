@@ -1,0 +1,27 @@
+{
+  "author": {
+    "email": "ngehringer@gmail.com",
+    "name": "Nate Gehringer"
+  },
+  "description": "Core: A web browser–hosted runtime library",
+  "homepage": "https://backwater.systems",
+  "license": "UNLICENSED",
+  "main": "dist/index.js",
+  "name": "@backwater-systems/core",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ngehringer/core.git"
+  },
+  "version": "1.0.0",
+  "devDependencies": {
+    "del": "^6.0.0",
+    "eslint": "^7.12.1",
+    "gulp": "^4.0.2"
+  },
+  "scripts": {
+    "build": "gulp build",
+    "lint": "eslint src",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
