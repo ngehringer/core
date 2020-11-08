@@ -6,21 +6,29 @@ import sendRequest from './sendRequest.js';
 
 
 const DEFAULTS = Object.freeze({
-  'DEBUG': false
+  'DEBUG': false,
+  'LOGGER': logging.ConsoleLogger
 });
 
 const PROCESS_ID = '@backwater-systems/core.webUtilities.ajax.delete';
 
 const _delete = async ({
   debug = DEFAULTS.DEBUG,
+  httpHeaders = null,
   location,
-  parameters = null,
-  httpHeaders = null
+  logger = DEFAULTS.LOGGER,
+  parameters = null
 }) => {
   // define whether debug mode is enabled
-  const _debug = utilities.validateType(debug, Boolean)
+  const _debug = utilities.validation.validateType(debug, Boolean)
     ? debug
     : DEFAULTS.DEBUG
+  ;
+
+  // define the logger
+  const _logger = utilities.validation.validateInheritance(logger, logging.BaseLogger)
+    ? logger
+    : DEFAULTS.LOGGER
   ;
 
   try {
@@ -46,7 +54,11 @@ const _delete = async ({
   }
   catch (error) {
     // log the error …
-    logging.Logger.logError(error, PROCESS_ID, _debug);
+    _logger.logError({
+      'data': error,
+      'sourceID': PROCESS_ID,
+      'verbose': _debug
+    });
 
     // … and re-throw it
     throw error;

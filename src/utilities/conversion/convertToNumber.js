@@ -1,8 +1,8 @@
-import isNumber from './isNumber.js';
+import * as validation from '../validation/index.js';
 
 
 const convertToNumber = (value) => {
-  if ( isNumber(value) ) {
+  if ( validation.isNumber(value) ) {
     return (
       (typeof value === 'number')
       || (value instanceof Number)

@@ -5,22 +5,30 @@ import REFERENCE from '../../REFERENCE/index.js';
 
 
 const DEFAULTS = Object.freeze({
-  'DEBUG': false
+  'DEBUG': false,
+  'LOGGER': logging.ConsoleLogger
 });
 
 const PROCESS_ID = '@backwater-systems/core.webUtilities.ajax.parseResponse';
 
 const parseResponse = async ({
   debug = DEFAULTS.DEBUG,
+  logger = DEFAULTS.LOGGER,
   response
 }) => {
   // determine if debug mode is enabled (default: disabled)
-  const _debug = utilities.validateType(debug, Boolean)
+  const _debug = utilities.validation.validateType(debug, Boolean)
     ? debug
     : DEFAULTS.DEBUG
   ;
 
-  if ( !utilities.validateType(response, Response) ) throw new errors.TypeValidationError('response', Response);
+  // define the logger
+  const _logger = utilities.validation.validateInheritance(logger, logging.BaseLogger)
+    ? logger
+    : DEFAULTS.LOGGER
+  ;
+
+  if ( !utilities.validation.validateType(response, Response) ) throw new errors.TypeValidationError('response', Response);
 
   // attempt to determine the response’s media type
 
@@ -53,23 +61,21 @@ const parseResponse = async ({
   ;
 
   if (_debug) {
-    logging.Logger.logDebug(
-      `${parseResponse.name} → JSON: ${
-        isJSON
-          ? utilities.validateType(responseJSON, Object)
-            ? 'Yes'
-            : 'Yes – but parsing seems to have failed'
-          : 'No'
-      } | Text: ${
-        isText
-          ? utilities.validateType(responseText, String)
-            ? `Yes – ${utilities.formatNumber(responseText.length)} ${utilities.pluralize('byte', responseText.length)}`
-            : 'Yes – but parsing seems to have failed'
-          : 'No'
-      }`,
-      PROCESS_ID,
-      _debug
-    );
+    _logger.logDebug({
+      'data': {
+        'json': {
+          'expected': isJSON,
+          'valid': utilities.validation.validateType(responseJSON, Object)
+        },
+        'text': {
+          'byteCount': (responseText === null) ? null : responseText.length,
+          'expected': isText,
+          'valid': utilities.validation.validateType(responseText, String)
+        }
+      },
+      'sourceID': PROCESS_ID,
+      'verbose': _debug
+    });
   }
 
   return {

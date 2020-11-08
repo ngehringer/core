@@ -2,6 +2,9 @@ class ImplementationError extends Error {
   constructor(propertyName, className, ...rest) {
     super(...rest);
 
+    // define the error’s name
+    this.name = ImplementationError.name;
+
     this.className = (
       (typeof className === 'string')
       && (className !== '')

@@ -5,6 +5,9 @@ class EnumerationValidationError extends Error {
   constructor(valueName, enumerationName, ...rest) {
     super(...rest);
 
+    // define the error’s name
+    this.name = EnumerationValidationError.name;
+
     // define the enumeration’s name
     this.enumerationName = (
       (typeof enumerationName === 'string')

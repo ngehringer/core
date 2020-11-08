@@ -1,8 +1,9 @@
+import * as errors from '../../errors/index.js';
 import validateType from './validateType.js';
 
 
 const validateEnumeration = (value, enumeration) => {
-  if ( !validateType(enumeration, Object) ) throw new Error('‘enumeration’ is not an “object”.');
+  if ( !validateType(enumeration, Object) ) throw new errors.TypeValidationError('enumeration', Object);
 
   // a valid enumeration value must be a string or a number
   if (

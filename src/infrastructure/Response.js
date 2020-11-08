@@ -8,11 +8,11 @@ class Response {
 
   static error(message) {
     if (
-      !utilities.validateType(message, Error)
-      && !utilities.validateType(message, String)
+      !utilities.validation.validateType(message, Error)
+      && !utilities.validation.validateType(message, String)
     ) throw new errors.TypeValidationError('message', [Error, String]);
 
-    const _message = utilities.validateType(message, Error)
+    const _message = utilities.validation.validateType(message, Error)
       ? message.message
       : message
     ;
@@ -24,7 +24,7 @@ class Response {
   }
 
   static ok(message) {
-    if ( !utilities.validateType(message, String) ) throw new errors.TypeValidationError('message', String);
+    if ( !utilities.validation.validateType(message, String) ) throw new errors.TypeValidationError('message', String);
 
     return new Response({
       'message': message,
@@ -34,11 +34,11 @@ class Response {
 
   static warning(message) {
     if (
-      !utilities.validateType(message, Error)
-      && !utilities.validateType(message, String)
+      !utilities.validation.validateType(message, Error)
+      && !utilities.validation.validateType(message, String)
     ) throw new errors.TypeValidationError('message', [Error, String]);
 
-    const _message = utilities.validateType(message, Error)
+    const _message = utilities.validation.validateType(message, Error)
       ? message.message
       : message
     ;
@@ -56,12 +56,12 @@ class Response {
     this.id = utilities.generateUUID();
     this.time = new Date();
 
-    this.message = utilities.validateType(message, String)
+    this.message = utilities.validation.validateType(message, String)
       ? message
       : null
     ;
 
-    this.status = utilities.validateEnumeration(status, REFERENCE.ENUM.ResponseStatus)
+    this.status = utilities.validation.validateEnumeration(status, REFERENCE.ENUM.ResponseStatus)
       ? status
       : REFERENCE.ENUM.ResponseStatus.UNKNOWN
     ;

@@ -6,11 +6,11 @@ import getList from './getList.js';
 const setValue = (valueList) => {
   // ensure the specified list of parameters is well-formed
   if (
-    !utilities.validateType(valueList, Object)
-    || !Object.keys(valueList).every( (key) => utilities.isNonEmptyString(key) )
+    !utilities.validation.validateType(valueList, Object)
+    || !Object.keys(valueList).every( (key) => utilities.validation.isNonEmptyString(key) )
     || !Object.keys(valueList).every(
       (key) => (
-        utilities.isNonEmptyString(valueList[key])
+        utilities.validation.isNonEmptyString(valueList[key])
         || (valueList[key] === null)
       )
     )
@@ -27,7 +27,7 @@ const setValue = (valueList) => {
     const parameter = hashParameterList.find( (_parameter) => (_parameter.key === key) );
 
     // if a parameter with the specified key already exists, and …
-    if ( utilities.validateType(parameter, Object) ) {
+    if ( utilities.validation.validateType(parameter, Object) ) {
       // … the specified value is “null”, remove the parameter …
       if (value === null) {
         const parameterIndex = hashParameterList.indexOf(parameter);
@@ -38,14 +38,12 @@ const setValue = (valueList) => {
         parameter.value = value;
       }
     }
-    // … otherwise, add a new parameter to the list (as long as it isn’t “null”)
-    else {
-      if (value !== null) {
-        hashParameterList.push({
-          'key': key,
-          'value': value
-        });
-      }
+    // … otherwise, as long as it isn’t “null”, add a new parameter to the list
+    else if (value !== null) {
+      hashParameterList.push({
+        'key': key,
+        'value': value
+      });
     }
   }
 

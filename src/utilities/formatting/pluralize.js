@@ -1,9 +1,9 @@
-import isNumber from './isNumber.js';
+import * as validation from '../validation/index.js';
 
 
 const pluralize = (word, count) => {
   // coerce ‘count’ into an absolute value, and pluralize by default if it is unspecified or invalid
-  const _count = isNumber(count)
+  const _count = validation.isNumber(count)
     ? Math.abs(count)
     // default: pluralize
     : 2

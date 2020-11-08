@@ -9,7 +9,7 @@ class PaginationOptions {
     sortOrder,
     startIndex
   }) {
-    if ( utilities.isNumber(pageSize) ) {
+    if ( utilities.validation.isNumber(pageSize) ) {
       const _pageSize = Number(pageSize);
       if (
         !Number.isInteger(_pageSize)
@@ -22,20 +22,20 @@ class PaginationOptions {
       this.pageSize = null;
     }
 
-    this.sortColumn = utilities.isNonEmptyString(sortColumn)
+    this.sortColumn = utilities.validation.isNonEmptyString(sortColumn)
       ? sortColumn
       : null
     ;
 
     this.sortOrder = (
-      utilities.validateType(sortOrder, String)
-      && utilities.validateEnumeration(sortOrder.toLowerCase(), REFERENCE.ENUM.SortOrder)
+      utilities.validation.validateType(sortOrder, String)
+      && utilities.validation.validateEnumeration(sortOrder.toLowerCase(), REFERENCE.ENUM.SortOrder)
     )
       ? sortOrder.toLowerCase()
       : null
     ;
 
-    if ( utilities.isNumber(startIndex) ) {
+    if ( utilities.validation.isNumber(startIndex) ) {
       const _startIndex = Number(startIndex);
       if (
         !Number.isInteger(_startIndex)

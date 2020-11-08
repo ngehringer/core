@@ -3,18 +3,20 @@ import * as utilities from '../utilities/index.js';
 
 
 class BaseFactory {
+  static get CLASS_NAME() { return `@backwater-systems/core.infrastructure.${BaseFactory.name}`; }
+
   static get typeList() {
     // initialize the registered type list, if necessary
-    if ( !utilities.validateType(this._typeList, Object) ) {
+    if ( !utilities.validation.validateType(this._typeList, Object) ) {
       // attempt to seed the registered type list with the extending class’s “_initialTypeList” property
-      if ( utilities.validateType(this._initialTypeList, Object) ) {
+      if ( utilities.validation.validateType(this._initialTypeList, Object) ) {
         // ensure the extending class implements a “_baseType” property
-        if ( !utilities.validateType(this._baseType, Function) ) throw new errors.ImplementationError('_baseType', this.CLASS_NAME);
+        if ( !utilities.validation.validateType(this._baseType, Function) ) throw new errors.ImplementationError('_baseType', this.CLASS_NAME);
 
         // ensure all of the initially-registered types extend the factory’s base type
         const invalidTypeNameList = Object.keys(this._initialTypeList)
           .filter(
-            (typeName) => !utilities.validateInheritance(this._initialTypeList[typeName], this._baseType)
+            (typeName) => !utilities.validation.validateInheritance(this._initialTypeList[typeName], this._baseType)
           )
           .map( (typeName) => typeName )
         ;
@@ -40,8 +42,8 @@ class BaseFactory {
   }
 
   static create(typeName, options) {
-    if ( !utilities.isNonEmptyString(typeName) ) throw new errors.TypeValidationError('typeName', String);
-    if ( !utilities.validateType(options, Object) && (options !== null) ) throw new errors.TypeValidationError('options', Object);
+    if ( !utilities.validation.isNonEmptyString(typeName) ) throw new errors.TypeValidationError('typeName', String);
+    if ( !utilities.validation.validateType(options, Object) && (options !== null) ) throw new errors.TypeValidationError('options', Object);
 
     // retrieve the specified type’s class
     const Type = this._getType(typeName);
@@ -54,29 +56,24 @@ class BaseFactory {
   }
 
   static registerType(typeName, typeClass) {
-    try {
-      // ensure the extending class implements a “_baseType” property
-      if ( !utilities.validateType(this._baseType, Function) ) throw new errors.ImplementationError('_baseType', this.CLASS_NAME);
+    // ensure the extending class implements a “_baseType” property
+    if ( !utilities.validation.validateType(this._baseType, Function) ) throw new errors.ImplementationError('_baseType', this.CLASS_NAME);
 
-      if ( !utilities.isNonEmptyString(typeName) ) throw new errors.TypeValidationError('typeName', String);
-      if ( !utilities.validateType(typeClass, Function) ) throw new errors.TypeValidationError('typeClass', Function);
-      // ensure the specified class extends the factory’s base type
-      if ( !utilities.validateInheritance(typeClass, this._baseType) ) throw new errors.TypeValidationError('typeClass', this._baseType);
+    if ( !utilities.validation.isNonEmptyString(typeName) ) throw new errors.TypeValidationError('typeName', String);
+    if ( !utilities.validation.validateType(typeClass, Function) ) throw new errors.TypeValidationError('typeClass', Function);
+    // ensure the specified class extends the factory’s base type
+    if ( !utilities.validation.validateInheritance(typeClass, this._baseType) ) throw new errors.TypeValidationError('typeClass', this._baseType);
 
-      // attempt to retrieve the type from the type registry
-      const type = this._getType(typeName);
-      if (type !== null) throw new Error(`“${typeName}” is already a registered type.`);
+    // attempt to retrieve the type from the type registry
+    const type = this._getType(typeName);
+    if (type !== null) throw new Error(`“${typeName}” is already a registered type.`);
 
-      // add the type to the registry
-      this.typeList[typeName] = typeClass;
-    }
-    catch (error) {
-      console.log(error);
-    }
+    // add the type to the registry
+    this.typeList[typeName] = typeClass;
   }
 
   static unregisterType(typeName) {
-    if ( !utilities.isNonEmptyString(typeName) ) throw new errors.TypeValidationError('typeName', String);
+    if ( !utilities.validation.isNonEmptyString(typeName) ) throw new errors.TypeValidationError('typeName', String);
 
     // attempt to retrieve the type from the type registry
     const type = this._getType(typeName);

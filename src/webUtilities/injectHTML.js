@@ -5,6 +5,7 @@ import * as utilities from '../utilities/index.js';
 
 const DEFAULTS = Object.freeze({
   'DEBUG': false,
+  'LOGGER': logging.ConsoleLogger,
   'REPLACE': false,
   'SOURCE_ID': null
 });
@@ -14,18 +15,25 @@ const PROCESS_ID = '@backwater-systems/core.webUtilities.injectHTML';
 const injectHTML = ({
   debug = DEFAULTS.DEBUG,
   html,
+  logger = DEFAULTS.LOGGER,
   replace = DEFAULTS.REPLACE,
   sourceID = DEFAULTS.SOURCE_ID,
   target,
 }) => {
   // define whether debug mode is enabled
-  const _debug = utilities.validateType(debug, Boolean)
+  const _debug = utilities.validation.validateType(debug, Boolean)
     ? debug
     : DEFAULTS.DEBUG
   ;
 
+  // define the logger
+  const _logger = utilities.validation.validateInheritance(logger, logging.BaseLogger)
+    ? logger
+    : DEFAULTS.LOGGER
+  ;
+
   // define whether the target’s contents should be replaced or appended
-  const _replace = utilities.validateType(replace, Boolean)
+  const _replace = utilities.validation.validateType(replace, Boolean)
     ? replace
     : DEFAULTS.DEBUG
   ;
@@ -33,19 +41,19 @@ const injectHTML = ({
   // get a reference to the DOM injection target
   let targetElement = null;
   // ‘target’ is a “string” …
-  if ( utilities.isNonEmptyString(target) ) {
+  if ( utilities.validation.isNonEmptyString(target) ) {
     // … looks like it’s an HTML ID
     if ( !target.match( new RegExp('#.*') ) ) throw new Error(`“${target}” is not an HTML ID.`);
     targetElement = document.querySelector(`${target}`);
     if (targetElement === null) throw new Error(`“${target}“ does not exist.`);
   }
   // ‘target’ is an “Element”
-  else if ( utilities.validateType(target, Element) ) {
+  else if ( utilities.validation.validateType(target, Element) ) {
     targetElement = target;
   }
   else throw new Error('Invalid “target” parameter value specified: must be a “string” (HTML ID) or an “Element”.');
 
-  if ( !utilities.isNonEmptyString(html) ) throw new errors.TypeValidationError('html', String);
+  if ( !utilities.validation.isNonEmptyString(html) ) throw new errors.TypeValidationError('html', String);
 
   // inject the response into the DOM by …
   // … replacing the contents of the target element
@@ -74,20 +82,21 @@ const injectHTML = ({
       (scriptNode, index) => {
         const scriptText = scriptNode.textContent;
 
-        logging.Logger.logDebug(
-          `Parsing script (${utilities.formatNumber(index + 1)} / ${utilities.formatNumber(scriptNodeList.length)}) …`,
-          PROCESS_ID,
-          _debug
-        );
+        _logger.logDebug({
+          'data': `Parsing script (${utilities.formatting.formatNumber(index + 1)} / ${utilities.formatting.formatNumber(scriptNodeList.length)}) …`,
+          'sourceID': PROCESS_ID,
+          'verbose': _debug
+        });
 
+        // determine whether the script is valid (is not only whitespace)
         const validScript = new RegExp('^\\s*$').test(scriptText);
 
         if (!validScript) {
-          logging.Logger.logDebug(
-            `Script ${utilities.formatNumber(index + 1)} is empty or contains only whitespace.`,
-            PROCESS_ID,
-            _debug
-          );
+          _logger.logWarning({
+            'data': `Script ${utilities.formatting.formatNumber(index + 1)} is empty or contains only whitespace.`,
+            'sourceID': PROCESS_ID,
+            'verbose': _debug
+          });
         }
 
       return validScript;
@@ -105,11 +114,11 @@ const injectHTML = ({
     }
     catch (error) {
       // log errors caused by injected script blocks
-      logging.Logger.logError(
-        error.message,
-        `${PROCESS_ID} (injected script block${(sourceID === null) ? '' : ` @ “${sourceID}”`})`,
-        _debug
-      );
+      _logger.logError({
+        'data': error,
+        'sourceID': `${PROCESS_ID} (injected script block${(sourceID === null) ? '' : ` @ “${sourceID}”`})`,
+        'verbose': _debug
+      });
     }
   }
 };

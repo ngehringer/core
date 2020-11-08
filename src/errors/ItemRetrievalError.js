@@ -8,6 +8,9 @@ class ItemRetrievalError extends Error {
   ) {
     super(...rest);
 
+    // define the error’s name
+    this.name = ItemRetrievalError.name;
+
     // define the item’s name
     if (
       (typeof itemName !== 'string')

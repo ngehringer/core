@@ -7,7 +7,7 @@ class BaseModel {
 
   constructor({ data }) {
     // ensure the extending class implements a “getModel” function
-    if ( !utilities.validateType(this.getModel, Function) ) throw new errors.ImplementationError('getModel', this.constructor.CLASS_NAME);
+    if ( !utilities.validation.validateType(this.getModel, Function) ) throw new errors.ImplementationError('getModel', this.constructor.CLASS_NAME);
 
     // generate a unique ID for the model
     this.id = utilities.generateUUID();
@@ -17,13 +17,13 @@ class BaseModel {
 
   setData(data) {
     // ensure the model’s source data is valid
-    if ( !utilities.validateType(data, Object) ) throw new errors.TypeValidationError('data', Object);
+    if ( !utilities.validation.validateType(data, Object) ) throw new errors.TypeValidationError('data', Object);
 
     // evaluate the model from its source data
     const model = this.getModel(data);
 
     // ensure the model evaluated to an object
-    if ( !utilities.validateType(model, Object) ) throw new errors.TypeValidationError('model', Object);
+    if ( !utilities.validation.validateType(model, Object) ) throw new errors.TypeValidationError('model', Object);
 
     this.model = model;
   }

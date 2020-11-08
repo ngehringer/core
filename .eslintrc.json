@@ -122,7 +122,12 @@
             "error",
             "unix"
         ],
-        "lines-around-comment": "warn",
+        "lines-around-comment": [
+            "warn",
+            {
+                "allowBlockStart": true
+            }
+        ],
         "lines-around-directive": "error",
         "lines-between-class-members": [
             "error",
@@ -155,7 +160,7 @@
         "no-caller": "error",
         "no-catch-shadow": "error",
         "no-confusing-arrow": "error",
-        "no-console": "off",
+        "no-console": "warn",
         "no-constructor-return": "error",
         "no-continue": "warn",
         "no-div-regex": "error",

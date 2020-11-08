@@ -7,12 +7,9 @@ class Base {
 
   static get DEFAULTS() {
     return Object.freeze({
-      DEBUG: false
+      DEBUG: false,
+      LOGGER: logging.ConsoleLogger
     });
-  }
-
-  static get _defaultLogger() {
-    return new logging.Logger();
   }
 
   static _generateUniqueID() {
@@ -21,25 +18,25 @@ class Base {
 
   constructor({
     debug = Base.DEFAULTS.DEBUG,
-    logger = null
+    logger = Base.DEFAULTS.LOGGER
   } = {}) {
     try {
-      // initially, assign the process logger to the default instance
-      this.logger = this.constructor._defaultLogger;
+      // initially, assign the process logger to the default instance to ensure logging works as soon as possible
+      this.logger = Base.DEFAULTS.LOGGER;
 
       // generate a UUID to identify this instance
       this.id = Base._generateUniqueID();
 
-      // reassign the process logger from the default, if one is specified
-      if ( utilities.validateType(logger, logging.Logger) ) {
-        this.logger = logger;
-      }
-
-      // indicate whether debug mode is enabled
-      this.debug = utilities.validateType(debug, Boolean)
+      // define whether debug mode is enabled
+      this.debug = utilities.validation.validateType(debug, Boolean)
         ? debug
         : Base.DEFAULTS.DEBUG
       ;
+
+      // if specified, reassign the process logger from the default
+      if ( utilities.validation.validateInheritance(logger, logging.BaseLogger) ) {
+        this.logger = logger;
+      }
     }
     catch (error) {
       this.logError(error);
@@ -49,25 +46,51 @@ class Base {
   }
 
   get processID() {
-    return `${utilities.isNonEmptyString(this.constructor.CLASS_NAME) ? `${this.constructor.CLASS_NAME}:` : ''}${this.id || '{unknown ID}'}`;
+    return `${utilities.validation.isNonEmptyString(this.constructor.CLASS_NAME) ? `${this.constructor.CLASS_NAME}:` : ''}${this.id || '{unknown ID}'}`;
   }
 
-  logDebug(logItem) {
+  logCriticalError(data) {
+    this.logger.logCriticalError({
+      'data': data,
+      'sourceID': this.processID,
+      'verbose': this.debug
+    });
+  }
+
+  logDebug(data) {
+    // abort if debug mode is not enabled
     if (!this.debug) return;
 
-    this.logger.logDebug(logItem, this.debug, this.processID);
+    this.logger.logDebug({
+      'data': data,
+      'sourceID': this.processID,
+      'verbose': this.debug
+    });
   }
 
-  logError(logItem) {
-    this.logger.logError(logItem, this.debug, this.processID);
+  logError(data) {
+    this.logger.logError({
+      'data': data,
+      'sourceID': this.processID,
+      'verbose': this.debug
+    });
   }
 
-  logInfo(logItem) {
-    this.logger.logInfo(logItem, this.debug, this.processID);
+  logInfo(data) {
+    this.logger.logInfo({
+      'data': data,
+      'sourceID': this.processID,
+      'verbose': this.debug
+    });
   }
 
-  logWarning(logItem) {
-    this.logger.logWarning(logItem, this.debug, this.processID);
+  logWarning(data) {
+    this.logger.log({
+      'data': data,
+      'logLevel': logging.REFERENCE.ENUMERATIONS.LOG_LEVEL.WARNING,
+      'sourceID': this.processID,
+      'verbose': this.debug
+    });
   }
 }
 

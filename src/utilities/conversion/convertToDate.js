@@ -1,8 +1,8 @@
-import validateType from './validateType.js';
+import * as validation from '../validation/index.js';
 
 
 const convertToDate = (value) => {
-  return validateType(value, Date)
+  return validation.validateType(value, Date)
     ? value
     : new Date(value)
   ;

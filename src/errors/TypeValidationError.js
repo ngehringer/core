@@ -5,6 +5,9 @@ class TypeValidationError extends Error {
   constructor(variableName, type, ...rest) {
     super(...rest);
 
+    // define the error’s name
+    this.name = TypeValidationError.name;
+
     // ensure the specified type parameter is …
     if (
       !(

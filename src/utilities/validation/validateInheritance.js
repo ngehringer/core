@@ -1,4 +1,4 @@
-import * as errors from '../errors/index.js';
+import * as errors from '../../errors/index.js';
 import validateType from './validateType.js';
 
 
