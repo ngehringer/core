@@ -10,7 +10,13 @@ class Response {
     if (
       !utilities.validation.validateType(message, Error)
       && !utilities.validation.validateType(message, String)
-    ) throw new errors.TypeValidationError('message', [Error, String]);
+    ) throw new errors.TypeValidationError(
+      'message',
+      [
+        Error,
+        String
+      ]
+    );
 
     const _message = utilities.validation.validateType(message, Error)
       ? message.message
@@ -36,7 +42,13 @@ class Response {
     if (
       !utilities.validation.validateType(message, Error)
       && !utilities.validation.validateType(message, String)
-    ) throw new errors.TypeValidationError('message', [Error, String]);
+    ) throw new errors.TypeValidationError(
+      'message',
+      [
+        Error,
+        String
+      ]
+    );
 
     const _message = utilities.validation.validateType(message, Error)
       ? message.message

@@ -164,7 +164,7 @@ const sendRequest = async ({
     'request': request,
     'response': response,
     'statusCode': response.status,
-    'statusReasonPhrase': response.statusText,
+    'statusReasonPhrase': response.statusText
   };
 };
 

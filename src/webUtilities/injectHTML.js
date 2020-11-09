@@ -18,7 +18,7 @@ const injectHTML = ({
   logger = DEFAULTS.LOGGER,
   replace = DEFAULTS.REPLACE,
   sourceID = DEFAULTS.SOURCE_ID,
-  target,
+  target
 }) => {
   // define whether debug mode is enabled
   const _debug = utilities.validation.validateType(debug, Boolean)
@@ -43,7 +43,7 @@ const injectHTML = ({
   // ‘target’ is a “string” …
   if ( utilities.validation.isNonEmptyString(target) ) {
     // … looks like it’s an HTML ID
-    if ( !target.match( new RegExp('#.*') ) ) throw new Error(`“${target}” is not an HTML ID.`);
+    if ( !target.match(/#.*/) ) throw new Error(`“${target}” is not an HTML ID.`);
     targetElement = document.querySelector(`${target}`);
     if (targetElement === null) throw new Error(`“${target}“ does not exist.`);
   }
@@ -82,14 +82,16 @@ const injectHTML = ({
       (scriptNode, index) => {
         const scriptText = scriptNode.textContent;
 
-        _logger.logDebug({
-          'data': `Parsing script (${utilities.formatting.formatNumber(index + 1)} / ${utilities.formatting.formatNumber(scriptNodeList.length)}) …`,
-          'sourceID': PROCESS_ID,
-          'verbose': _debug
-        });
+        if (_debug) {
+          _logger.logDebug({
+            'data': `Parsing script (${utilities.formatting.formatNumber(index + 1)} / ${utilities.formatting.formatNumber(scriptNodeList.length)}) …`,
+            'sourceID': PROCESS_ID,
+            'verbose': _debug
+          });
+        }
 
         // determine whether the script is valid (is not only whitespace)
-        const validScript = new RegExp('^\\s*$').test(scriptText);
+        const validScript = (/^\s*$/).test(scriptText);
 
         if (!validScript) {
           _logger.logWarning({

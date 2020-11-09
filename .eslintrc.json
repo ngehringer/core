@@ -17,11 +17,14 @@
         "array-bracket-newline": "error",
         "array-bracket-spacing": [
             "error",
-            "never"
+            "never",
+            {
+                "arraysInArrays": true
+            }
         ],
         "array-callback-return": "error",
-        "array-element-newline": "off",
-        "arrow-body-style": "off",
+        "array-element-newline": "error",
+        "arrow-body-style": "error",
         "arrow-parens": [
             "error",
             "always"
@@ -49,7 +52,7 @@
         "camelcase": "warn",
         "capitalized-comments": "off",
         "class-methods-use-this": "off",
-        "comma-dangle": "off",
+        "comma-dangle": "error",
         "comma-spacing": [
             "error",
             {
@@ -80,7 +83,7 @@
             "error",
             "never"
         ],
-        "eqeqeq": "warn",
+        "eqeqeq": "error",
         "func-call-spacing": "error",
         "func-name-matching": "error",
         "func-names": "error",
@@ -117,7 +120,7 @@
                 "before": true
             }
         ],
-        "line-comment-position": "error",
+        "line-comment-position": "off",
         "linebreak-style": [
             "error",
             "unix"
@@ -136,7 +139,7 @@
         "max-classes-per-file": "error",
         "max-depth": "error",
         "max-len": "off",
-        "max-lines": "error",
+        "max-lines": "off",
         "max-lines-per-function": "off",
         "max-nested-callbacks": "error",
         "max-params": "error",
@@ -147,7 +150,7 @@
             "error",
             "always-multiline"
         ],
-        "new-cap": "warn",
+        "new-cap": "error",
         "new-parens": "error",
         "newline-after-var": "off",
         "newline-before-return": "error",
@@ -162,19 +165,14 @@
         "no-confusing-arrow": "error",
         "no-console": "warn",
         "no-constructor-return": "error",
-        "no-continue": "warn",
+        "no-continue": "error",
         "no-div-regex": "error",
         "no-dupe-else-if": "error",
         "no-duplicate-imports": "error",
-        "no-else-return": [
-            "error",
-            {
-                "allowElseIf": true
-            }
-        ],
+        "no-else-return": "error",
         "no-empty-function": "error",
         "no-eq-null": "error",
-        "no-eval": "off",
+        "no-eval": "warn",
         "no-extend-native": "error",
         "no-extra-bind": "error",
         "no-extra-label": "error",
@@ -184,13 +182,13 @@
         "no-implicit-globals": "error",
         "no-implied-eval": "error",
         "no-import-assign": "error",
-        "no-inline-comments": "error",
+        "no-inline-comments": "off",
         "no-invalid-this": "error",
         "no-iterator": "error",
         "no-label-var": "error",
         "no-labels": "error",
         "no-lone-blocks": "error",
-        "no-lonely-if": "warn",
+        "no-lonely-if": "error",
         "no-loop-func": "error",
         "no-magic-numbers": "off",
         "no-mixed-operators": "error",
@@ -255,7 +253,7 @@
         "no-useless-return": "error",
         "no-var": "error",
         "no-void": "error",
-        "no-warning-comments": "error",
+        "no-warning-comments": "off",
         "no-whitespace-before-property": "error",
         "nonblock-statement-body-position": "error",
         "object-curly-newline": "error",
@@ -266,7 +264,10 @@
         "object-property-newline": "error",
         "object-shorthand": "off",
         "one-var": "off",
-        "one-var-declaration-per-line": "off",
+        "one-var-declaration-per-line": [
+            "error",
+            "initializations"
+        ],
         "operator-assignment": "error",
         "operator-linebreak": [
             "error",
@@ -283,7 +284,7 @@
         "prefer-object-spread": "error",
         "prefer-promise-reject-errors": "error",
         "prefer-reflect": "warn",
-        "prefer-regex-literals": "off",
+        "prefer-regex-literals": "error",
         "prefer-rest-params": "error",
         "prefer-spread": "error",
         "prefer-template": "error",
@@ -311,7 +312,13 @@
         ],
         "semi-style": "off",
         "sort-imports": "error",
-        "sort-keys": "warn",
+        "sort-keys": [
+            "warn",
+            "asc",
+            {
+                "natural": true
+            }
+        ],
         "sort-vars": "error",
         "space-before-blocks": "error",
         "space-before-function-paren": "off",

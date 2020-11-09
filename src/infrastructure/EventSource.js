@@ -73,7 +73,10 @@ class EventSource {
 
     if (this.debug) {
       this.logger.logDebug({
-        'data': `sendEvent → eventType: ${eventType} | registered handlers: ${utilities.formatting.formatNumber(eventHandlerList.length)}`,
+        'data': {
+          'eventType': eventType,
+          'registeredHandlerCount': eventHandlerList.length
+        },
         'sourceID': this.constructor.CLASS_NAME,
         'verbose': this.debug
       });
