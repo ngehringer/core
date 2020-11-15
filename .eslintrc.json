@@ -1,7 +1,7 @@
 {
     "env": {
         "browser": true,
-        "es6": true
+        "es2020": true
     },
     "extends": "eslint:recommended",
     "globals": {
@@ -9,7 +9,6 @@
         "SharedArrayBuffer": "readonly"
     },
     "parserOptions": {
-        "ecmaVersion": 2018,
         "sourceType": "module"
     },
     "rules": {
@@ -283,7 +282,6 @@
         "prefer-numeric-literals": "error",
         "prefer-object-spread": "error",
         "prefer-promise-reject-errors": "error",
-        "prefer-reflect": "warn",
         "prefer-regex-literals": "error",
         "prefer-rest-params": "error",
         "prefer-spread": "error",
