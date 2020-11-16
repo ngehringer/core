@@ -5,18 +5,20 @@ import sendRequest from './sendRequest.js';
 
 
 const DEFAULTS = Object.freeze({
-  'DEBUG': false,
-  'LOGGER': logging.ConsoleLogger
+  DEBUG: false,
+  HTTP_HEADERS: null,
+  LOGGER: logging.ConsoleLogger,
+  PARAMETERS: null
 });
 
 const PROCESS_ID = '@backwater-systems/core.webUtilities.ajax.head';
 
 const head = async ({
   debug = DEFAULTS.DEBUG,
+  httpHeaders = DEFAULTS.HTTP_HEADERS,
   location,
   logger = DEFAULTS.LOGGER,
-  parameters = null,
-  httpHeaders = null
+  parameters = DEFAULTS.PARAMETERS
 }) => {
   // define whether debug mode is enabled
   const _debug = utilities.validation.validateType(debug, Boolean)
@@ -33,11 +35,11 @@ const head = async ({
   try {
     // execute the request
     const response = await sendRequest({
-      'debug': _debug,
-      'httpHeaders': httpHeaders,
-      'httpMethod': REFERENCE.ENUMERATIONS.HTTP_METHOD.HEAD,
-      'location': location,
-      'parameters': parameters
+      debug: _debug,
+      httpHeaders: httpHeaders,
+      httpMethod: REFERENCE.ENUMERATIONS.HTTP_METHOD.HEAD,
+      location: location,
+      parameters: parameters
     });
 
     return {
@@ -45,14 +47,17 @@ const head = async ({
     };
   }
   catch (error) {
-    // log the error …
-    _logger.logError({
-      'data': error,
-      'sourceID': PROCESS_ID,
-      'verbose': _debug
-    });
+    // if debug mode is enabled …
+    if (_debug) {
+      // … log the error
+      _logger.logError({
+        data: error,
+        sourceID: PROCESS_ID,
+        verbose: _debug
+      });
+    }
 
-    // … and re-throw it
+    // re-throw the error
     throw error;
   }
 };

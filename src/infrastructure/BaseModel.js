@@ -19,6 +19,8 @@ class BaseModel {
     // ensure the model’s source data is valid
     if ( !utilities.validation.validateType(data, Object) ) throw new errors.TypeValidationError('data', Object);
 
+    this.data = data;
+
     // evaluate the model from its source data
     const model = this.getModel(data);
 

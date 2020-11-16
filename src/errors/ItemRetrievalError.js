@@ -1,8 +1,8 @@
 class ItemRetrievalError extends Error {
   constructor(
     {
-      itemName,
-      collectionName = null
+      collectionName = null,
+      itemName = null
     },
     ...rest
   ) {
@@ -11,30 +11,35 @@ class ItemRetrievalError extends Error {
     // define the error’s name
     this.name = ItemRetrievalError.name;
 
-    // define the item’s name
-    if (
-      (typeof itemName !== 'string')
-      || (itemName === '')
-    ) throw new Error('“itemName” is not a non-empty string.');
-    this.itemName = itemName;
-
     // define the collection’s name
     this.collectionName = (
-      (typeof collectionName !== 'string')
-      || (collectionName === '')
+      (typeof collectionName === 'string')
+      && (collectionName !== '')
     )
-      ? null
-      : collectionName
+      ? collectionName
+      : null
+    ;
+
+    // define the item’s name
+    this.itemName = (
+      (typeof itemName === 'string')
+      && (itemName !== '')
+    )
+      ? itemName
+      : null
     ;
   }
 
   get message() {
-    return `Could not retrieve “${this.itemName}”${
+    return `Could not retrieve the item${
+      (this.itemName === null)
+        ? ''
+        : ` “${this.itemName}”`
+    } from the collection${
       (this.collectionName === null)
         ? ''
-        : ` from ${this.collectionName}`
-      }).`
-    ;
+        : ` “${this.collectionName}”`
+    }.`;
   }
 }
 

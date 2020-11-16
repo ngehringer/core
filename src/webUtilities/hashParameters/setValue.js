@@ -41,8 +41,8 @@ const setValue = (valueList) => {
     // … otherwise, as long as it isn’t “null”, add a new parameter to the list
     else if (value !== null) {
       hashParameterList.push({
-        'key': key,
-        'value': value
+        key: key,
+        value: value
       });
     }
   }

@@ -5,8 +5,8 @@ import REFERENCE from '../../REFERENCE/index.js';
 
 
 const DEFAULTS = Object.freeze({
-  'DEBUG': false,
-  'LOGGER': logging.ConsoleLogger
+  DEBUG: false,
+  LOGGER: logging.ConsoleLogger
 });
 
 const PROCESS_ID = '@backwater-systems/core.webUtilities.ajax.parseResponse';
@@ -62,25 +62,25 @@ const parseResponse = async ({
 
   if (_debug) {
     _logger.logDebug({
-      'data': {
-        'json': {
-          'expected': isJSON,
-          'valid': utilities.validation.validateType(responseJSON, Object)
+      data: {
+        json: {
+          expected: isJSON,
+          valid: utilities.validation.validateType(responseJSON, Object)
         },
-        'text': {
-          'byteCount': (responseText === null) ? null : responseText.length,
-          'expected': isText,
-          'valid': utilities.validation.validateType(responseText, String)
+        text: {
+          byteCount: (responseText === null) ? null : responseText.length,
+          expected: isText,
+          valid: utilities.validation.validateType(responseText, String)
         }
       },
-      'sourceID': PROCESS_ID,
-      'verbose': _debug
+      sourceID: PROCESS_ID,
+      verbose: _debug
     });
   }
 
   return {
-    'json': responseJSON,
-    'text': responseText
+    json: responseJSON,
+    text: responseText
   };
 };
 

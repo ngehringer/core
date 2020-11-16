@@ -3,7 +3,8 @@ import ENUMERATIONS from './ENUMERATIONS/index.js';
 
 const REFERENCE = Object.freeze({
   ENUMERATIONS: ENUMERATIONS,
-  NULL_PLACEHOLDER: '—'
+  NULL_PLACEHOLDER: '—',
+  UUID_REGEXP: /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/
 });
 
 

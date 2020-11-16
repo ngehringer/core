@@ -1,6 +1,3 @@
-import REFERENCE from '../REFERENCE/index.js';
-
-
 class TypeValidationError extends Error {
   constructor(variableName, type, ...rest) {
     super(...rest);
@@ -37,7 +34,7 @@ class TypeValidationError extends Error {
     this.typeNameList = (
       Array.isArray(type)
         ? type
-        : [type]
+        : [ type ]
     ).map(
       (_type) => {
         if (
@@ -51,7 +48,7 @@ class TypeValidationError extends Error {
   }
 
   get message() {
-    return `‘${this.variableName || REFERENCE.NULL_PLACEHOLDER}’ is not a valid ${this.typeNameList.map( (typeName) => `“${typeName}”` ).join(' | ')}.`;
+    return `Variable${(this.variableName === null) ? '' : ` “${this.variableName}”`} is not a valid ${this.typeNameList.map( (typeName) => `“${typeName}”` ).join(' | ')}.`;
   }
 }
 

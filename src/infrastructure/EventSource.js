@@ -28,6 +28,12 @@ class EventSource {
     ;
 
     /**
+     * A UUID that identifies this event source
+     * @type {string}
+     */
+    this.id = utilities.generateUUID();
+
+    /**
      * The process logger
      */
     this.logger = utilities.validation.validateInheritance(logger, logging.BaseLogger)
@@ -40,6 +46,10 @@ class EventSource {
      * @type {Object}
      */
     this.eventHandlerRegister = {};
+  }
+
+  get _processID() {
+    return `${this.constructor.CLASS_NAME}::${this.id}`;
   }
 
   registerEventHandler(eventType, eventHandler) {
@@ -73,36 +83,36 @@ class EventSource {
 
     if (this.debug) {
       this.logger.logDebug({
-        'data': {
-          'eventType': eventType,
-          'registeredHandlerCount': eventHandlerList.length
+        data: {
+          eventType: eventType,
+          registeredHandlerCount: eventHandlerList.length
         },
-        'sourceID': this.constructor.CLASS_NAME,
-        'verbose': this.debug
+        sourceID: this._processID,
+        verbose: this.debug
       });
     }
 
     // abort if there are no registered event handlers
     if (eventHandlerList.length === 0) {
       this.logger.logWarning({
-        'data': `No handlers are registered for “${eventType}” events.`,
-        'sourceID': this.constructor.CLASS_NAME,
-        'verbose': this.debug
+        data: `No handlers are registered for “${eventType}” events.`,
+        sourceID: this._processID,
+        verbose: this.debug
       });
 
       return;
     }
 
     // execute the event handlers (serially)
-    for await (const eventHandler of eventHandlerList) {
+    for (const eventHandler of eventHandlerList) {
       try {
         await eventHandler(...rest);
       }
       catch (error) {
         this.logger.logError({
-          'data': error,
-          'sourceID': this.constructor.CLASS_NAME,
-          'verbose': this.debug
+          data: error,
+          sourceID: this._processID,
+          verbose: this.debug
         });
       }
     }

@@ -16,12 +16,10 @@ A web browser–hosted runtime library
 
 - ### Infrastructure (`core.infrastructure`)
 
-    - #### `Base`
     - #### `BaseFactory`
     - #### `BaseModel`
     - #### `BaseViewModel`
     - #### `EventSource`
-    - #### `GenericViewModel`
     - #### `PaginationOptions`
     - #### `Response`
 
@@ -29,6 +27,7 @@ A web browser–hosted runtime library
 
     - #### `BaseLogger`
     - #### `ConsoleLogger`
+    - #### `REFERENCE`
 
 - ### Utilities (`core.utilities`)
 
@@ -72,6 +71,8 @@ A web browser–hosted runtime library
         - #### `setValue`
 
     - #### `injectHTML`
+
+- ### Reference Data (`core.REFERENCE`)
 
 ---
 

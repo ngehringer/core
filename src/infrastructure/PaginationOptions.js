@@ -1,8 +1,29 @@
 import * as utilities from '../utilities/index.js';
-import REFERENCE from '../REFERENCE/index.js';
 
 
 class PaginationOptions {
+  static get CLASS_NAME() { return `@backwater-systems/core.infrastructure.${PaginationOptions.name}`; }
+
+  static get DEFAULTS() {
+    return Object.freeze({
+      PAGE_SIZE: null,
+      SORT_COLUMN: null,
+      SORT_ORDER: null,
+      START_INDEX: null
+    });
+  }
+
+  static get REFERENCE() {
+    return Object.freeze({
+      ENUMERATIONS: Object.freeze({
+        SORT_ORDER: Object.freeze({
+          ASCENDING: 'ascending',
+          DESCENDING: 'descending'
+        })
+      })
+    });
+  }
+
   constructor({
     pageSize,
     sortColumn,
@@ -19,20 +40,20 @@ class PaginationOptions {
       this.pageSize = _pageSize;
     }
     else {
-      this.pageSize = null;
+      this.pageSize = PaginationOptions.DEFAULTS.PAGE_SIZE;
     }
 
     this.sortColumn = utilities.validation.isNonEmptyString(sortColumn)
       ? sortColumn
-      : null
+      : PaginationOptions.DEFAULTS.SORT_COLUMN
     ;
 
     this.sortOrder = (
       utilities.validation.validateType(sortOrder, String)
-      && utilities.validation.validateEnumeration(sortOrder.toLowerCase(), REFERENCE.ENUM.SortOrder)
+      && utilities.validation.validateEnumeration(sortOrder.toLowerCase(), PaginationOptions.REFERENCE.ENUMERATIONS.SORT_ORDER)
     )
       ? sortOrder.toLowerCase()
-      : null
+      : PaginationOptions.DEFAULTS.SORT_ORDER
     ;
 
     if ( utilities.validation.isNumber(startIndex) ) {
@@ -45,7 +66,7 @@ class PaginationOptions {
       this.startIndex = _startIndex;
     }
     else {
-      this.startIndex = null;
+      this.startIndex = PaginationOptions.DEFAULTS.START_INDEX;
     }
 
     // indicate if the parameters necessary to perform paging were provided

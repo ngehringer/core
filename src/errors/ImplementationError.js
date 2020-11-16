@@ -23,7 +23,7 @@ class ImplementationError extends Error {
   }
 
   get message() {
-    return `${(this.className === null) ? 'Class' : `“${this.className}”`} does not implement ${(this.propertyName === null) ? 'a required' : `the “${this.propertyName}”`} property.`;
+    return `Class${(this.className === null) ? '' : ` “${this.className}”`} does not implement ${(this.propertyName === null) ? 'a required' : `the required “${this.propertyName}”`} property.`;
   }
 }
 

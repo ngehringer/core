@@ -4,10 +4,10 @@ import * as utilities from '../utilities/index.js';
 
 
 const DEFAULTS = Object.freeze({
-  'DEBUG': false,
-  'LOGGER': logging.ConsoleLogger,
-  'REPLACE': false,
-  'SOURCE_ID': null
+  DEBUG: false,
+  LOGGER: logging.ConsoleLogger,
+  REPLACE: false,
+  SOURCE_ID: null
 });
 
 const PROCESS_ID = '@backwater-systems/core.webUtilities.injectHTML';
@@ -84,9 +84,9 @@ const injectHTML = ({
 
         if (_debug) {
           _logger.logDebug({
-            'data': `Parsing script (${utilities.formatting.formatNumber(index + 1)} / ${utilities.formatting.formatNumber(scriptNodeList.length)}) …`,
-            'sourceID': PROCESS_ID,
-            'verbose': _debug
+            data: `Parsing script (${utilities.formatting.formatNumber(index + 1)} / ${utilities.formatting.formatNumber(scriptNodeList.length)}) …`,
+            sourceID: PROCESS_ID,
+            verbose: _debug
           });
         }
 
@@ -95,9 +95,9 @@ const injectHTML = ({
 
         if (!validScript) {
           _logger.logWarning({
-            'data': `Script ${utilities.formatting.formatNumber(index + 1)} is empty or contains only whitespace.`,
-            'sourceID': PROCESS_ID,
-            'verbose': _debug
+            data: `Script ${utilities.formatting.formatNumber(index + 1)} is empty or contains only whitespace.`,
+            sourceID: PROCESS_ID,
+            verbose: _debug
           });
         }
 
@@ -117,9 +117,9 @@ const injectHTML = ({
     catch (error) {
       // log errors caused by injected script blocks
       _logger.logError({
-        'data': error,
-        'sourceID': `${PROCESS_ID} (injected script block${(sourceID === null) ? '' : ` @ “${sourceID}”`})`,
-        'verbose': _debug
+        data: error,
+        sourceID: `${PROCESS_ID} (injected script block${(sourceID === null) ? '' : ` @ “${sourceID}”`})`,
+        verbose: _debug
       });
     }
   }

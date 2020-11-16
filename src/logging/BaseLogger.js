@@ -13,27 +13,7 @@ class BaseLogger {
     });
   }
 
-  static _logInternalError(error) {
-    // define an ISO 8601–compliant timestamp for the error
-    const timestamp = new Date().toISOString();
-
-    // define the message
-    const message = utilities.validation.validateType(error, Error)
-      ? `“${error.message}”`
-      : '[null]'
-    ;
-
-    // extract the stack from the error
-    const stack = utilities.validation.validateType(error, Error)
-      ? `\n${error.stack}`
-      : ''
-    ;
-
-    // write a message describing the error to the console
-    console.log(`[${timestamp}] {${REFERENCE.ENUMERATIONS.LOG_LEVEL.CRITICAL_ERROR}|@backwater-systems/core.logging.${BaseLogger.name}} ${message}${stack}`);
-  }
-
-  static _getLogItem({
+  static _constructLogItem({
     data,
     logLevel = BaseLogger.DEFAULTS.LOG_LEVEL,
     sourceID = BaseLogger.DEFAULTS.SOURCE_ID,
@@ -76,50 +56,70 @@ class BaseLogger {
         // … (verbose) the error type name, message, and stack trace
         ? `(${data.name}) ${data.message}${utilities.validation.isNonEmptyString(data.stack) ? `\n${data.stack}` : ''}`
         // … (non-verbose) the error message
-        : data.message
+        : `${data.message}`
       ;
     }
 
     return {
-      'data': data,
-      'logLevel': _logLevel,
-      'message': message,
-      'sourceID': _sourceID,
-      'time': time
+      data: data,
+      logLevel: _logLevel,
+      message: message,
+      sourceID: _sourceID,
+      time: time
     };
+  }
+
+  static _logInternalError(error) {
+    // define an ISO 8601–compliant timestamp for the error
+    const timestamp = new Date().toISOString();
+
+    // define the message
+    const message = utilities.validation.validateType(error, Error)
+      ? `“${error.message}”`
+      : '[null]'
+    ;
+
+    // extract the stack from the error
+    const stack = utilities.validation.validateType(error, Error)
+      ? `\n${error.stack}`
+      : ''
+    ;
+
+    // write a message describing the error to the console
+    console.log(`[${timestamp}] {${REFERENCE.ENUMERATIONS.LOG_LEVEL.CRITICAL_ERROR}|${this.CLASS_NAME}} ${message}${stack}`);
   }
 
   static logCriticalError({ ...rest }) {
     this.log({
-      'logLevel': REFERENCE.ENUMERATIONS.LOG_LEVEL.CRITICAL_ERROR,
+      logLevel: REFERENCE.ENUMERATIONS.LOG_LEVEL.CRITICAL_ERROR,
       ...rest
     });
   }
 
   static logDebug({ ...rest }) {
     this.log({
-      'logLevel': REFERENCE.ENUMERATIONS.LOG_LEVEL.DEBUG,
+      logLevel: REFERENCE.ENUMERATIONS.LOG_LEVEL.DEBUG,
       ...rest
     });
   }
 
   static logError({ ...rest }) {
     this.log({
-      'logLevel': REFERENCE.ENUMERATIONS.LOG_LEVEL.ERROR,
+      logLevel: REFERENCE.ENUMERATIONS.LOG_LEVEL.ERROR,
       ...rest
     });
   }
 
   static logInfo({ ...rest }) {
     this.log({
-      'logLevel': REFERENCE.ENUMERATIONS.LOG_LEVEL.INFO,
+      logLevel: REFERENCE.ENUMERATIONS.LOG_LEVEL.INFO,
       ...rest
     });
   }
 
   static logWarning({ ...rest }) {
     this.log({
-      'logLevel': REFERENCE.ENUMERATIONS.LOG_LEVEL.WARNING,
+      logLevel: REFERENCE.ENUMERATIONS.LOG_LEVEL.WARNING,
       ...rest
     });
   }

@@ -11,7 +11,8 @@ class ConsoleLogger extends BaseLogger {
     verbose = BaseLogger.DEFAULTS.VERBOSE
   }) {
     try {
-      const logItem = super._getLogItem({
+      // construct a log item
+      const logItem = super._constructLogItem({
         data,
         logLevel,
         sourceID,
@@ -25,7 +26,7 @@ class ConsoleLogger extends BaseLogger {
       console.log(text);
     }
     catch (error) {
-      BaseLogger._logInternalError(error);
+      super._logInternalError(error);
     }
   }
 }

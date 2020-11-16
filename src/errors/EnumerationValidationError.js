@@ -1,6 +1,3 @@
-import REFERENCE from '../REFERENCE/index.js';
-
-
 class EnumerationValidationError extends Error {
   constructor(valueName, enumerationName, ...rest) {
     super(...rest);
@@ -28,7 +25,7 @@ class EnumerationValidationError extends Error {
   }
 
   get message() {
-    return `The value of ‘${this.valueName || REFERENCE.NULL_PLACEHOLDER}’ is an invalid ${(this.enumerationName === null) ? '' : `“${this.enumerationName}” `}enumeration item.`;
+    return `The specified${(this.valueName === null) ? '' : ` “${this.valueName}”`} value is an invalid${(this.enumerationName === null) ? '' : ` “${this.enumerationName}”`} enumeration item.`;
   }
 }
 

@@ -6,9 +6,9 @@ import generateQueryString from './generateQueryString.js';
 
 
 const DEFAULTS = Object.freeze({
-  'DEBUG': false,
-  'HTTP_HEADERS': [],
-  'LOGGER': logging.ConsoleLogger
+  DEBUG: false,
+  HTTP_HEADERS: [],
+  LOGGER: logging.ConsoleLogger
 });
 
 const PROCESS_ID = '@backwater-systems/core.webUtilities.ajax.sendRequest';
@@ -104,21 +104,21 @@ const sendRequest = async ({
   // in debug mode, log the request’s location, headers, and parameters
   if (_debug) {
     _logger.logDebug({
-      'data': {
-        'fetchRequest': {
-          'headers': Array.from( headers.entries() ).map(
+      data: {
+        fetchRequest: {
+          headers: Array.from( headers.entries() ).map(
             (headerKey_headerValue) => ({
-              'name': headerKey_headerValue[0],
-              'value': headerKey_headerValue[1]
+              name: headerKey_headerValue[0],
+              value: headerKey_headerValue[1]
             })
           ),
-          'httpMethod': _httpMethod,
-          'location': _location,
-          'parameters': parameters
+          httpMethod: _httpMethod,
+          location: _location,
+          parameters: parameters
         }
       },
-      'sourceID': PROCESS_ID,
-      'verbose': _debug
+      sourceID: PROCESS_ID,
+      verbose: _debug
     });
   }
 
@@ -138,33 +138,33 @@ const sendRequest = async ({
   // in debug mode, log the response’s status code and reason phrase
   if (_debug) {
     _logger.logDebug({
-      'data': {
-        'fetchResponse': {
-          'httpMethod': _httpMethod,
-          'location': _location,
-          'statusCode': response.status,
-          'statusReasonPhrase': response.statusText
+      data: {
+        fetchResponse: {
+          httpMethod: _httpMethod,
+          location: _location,
+          statusCode: response.status,
+          statusReasonPhrase: response.statusText
         }
       },
-      'sourceID': PROCESS_ID,
-      'verbose': _debug
+      sourceID: PROCESS_ID,
+      verbose: _debug
     });
   }
 
   // if the request was not successful, construct an error with metadata about the response
   if (!response.ok) throw new errors.HTTPResponseError({
-    'method': _httpMethod,
-    'response': response,
-    'statusCode': response.status,
-    'statusReasonPhrase': response.statusText,
-    'url': response.url
+    method: _httpMethod,
+    response: response,
+    statusCode: response.status,
+    statusReasonPhrase: response.statusText,
+    url: response.url
   });
 
   return {
-    'request': request,
-    'response': response,
-    'statusCode': response.status,
-    'statusReasonPhrase': response.statusText
+    request: request,
+    response: response,
+    statusCode: response.status,
+    statusReasonPhrase: response.statusText
   };
 };
 

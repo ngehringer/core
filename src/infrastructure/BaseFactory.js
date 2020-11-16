@@ -6,22 +6,22 @@ class BaseFactory {
   static get CLASS_NAME() { return `@backwater-systems/core.infrastructure.${BaseFactory.name}`; }
 
   static get typeList() {
+    // ensure the extending class implements a “_baseType” property
+    if ( !utilities.validation.validateType(this._baseType, Function) ) throw new errors.ImplementationError('_baseType', this.CLASS_NAME);
+
     // initialize the registered type list, if necessary
     if ( !utilities.validation.validateType(this._typeList, Object) ) {
       // attempt to seed the registered type list with the extending class’s “_initialTypeList” property
       if ( utilities.validation.validateType(this._initialTypeList, Object) ) {
-        // ensure the extending class implements a “_baseType” property
-        if ( !utilities.validation.validateType(this._baseType, Function) ) throw new errors.ImplementationError('_baseType', this.CLASS_NAME);
-
         // ensure all of the initially-registered types extend the factory’s base type
-        const invalidTypeNameList = Object.keys(this._initialTypeList)
-          .filter(
-            (typeName) => !utilities.validation.validateInheritance(this._initialTypeList[typeName], this._baseType)
-          )
-          .map( (typeName) => typeName )
-        ;
+        const invalidTypeNameList = Object.keys(this._initialTypeList).filter(
+          (typeName) => !utilities.validation.validateInheritance(this._initialTypeList[typeName], this._baseType)
+        );
         if (invalidTypeNameList.length !== 0) {
-          throw new errors.WarningError(`The following initially-registered types do not extend “${this._baseType.CLASS_NAME}”: { ${invalidTypeNameList.map( (typeName) => `“${typeName}”` ).join(' | ')} }`);
+          const implementationErrors = invalidTypeNameList.map(
+            (typeName) => new errors.TypeValidationError(typeName, this._baseType)
+          );
+          throw implementationErrors;
         }
 
         // build the type register from the factory’s initial type list

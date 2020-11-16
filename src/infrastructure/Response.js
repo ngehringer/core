@@ -1,22 +1,28 @@
 import * as errors from '../errors/index.js';
 import * as utilities from '../utilities/index.js';
-import REFERENCE from '../REFERENCE/index.js';
 
 
 class Response {
   static get CLASS_NAME() { return `@backwater-systems/core.infrastructure.${Response.name}`; }
 
+  static get REFERENCE() {
+    return Object.freeze({
+      ENUMERATIONS: Object.freeze({
+        RESPONSE_STATUS: Object.freeze({
+          ERROR: 'ERROR',
+          OK: 'OK',
+          UNKNOWN: 'UNKNOWN',
+          WARNING: 'WARNING'
+        })
+      })
+    });
+  }
+
   static error(message) {
     if (
       !utilities.validation.validateType(message, Error)
       && !utilities.validation.validateType(message, String)
-    ) throw new errors.TypeValidationError(
-      'message',
-      [
-        Error,
-        String
-      ]
-    );
+    ) throw new errors.TypeValidationError('message', [ Error, String ]);
 
     const _message = utilities.validation.validateType(message, Error)
       ? message.message
@@ -24,8 +30,8 @@ class Response {
     ;
 
     return new Response({
-      'message': _message,
-      'status': REFERENCE.ENUM.ResponseStatus.ERROR
+      message: _message,
+      status: Response.REFERENCE.ENUMERATIONS.RESPONSE_STATUS.ERROR
     });
   }
 
@@ -33,8 +39,8 @@ class Response {
     if ( !utilities.validation.validateType(message, String) ) throw new errors.TypeValidationError('message', String);
 
     return new Response({
-      'message': message,
-      'status': REFERENCE.ENUM.ResponseStatus.OK
+      message: message,
+      status: Response.REFERENCE.ENUMERATIONS.RESPONSE_STATUS.OK
     });
   }
 
@@ -42,13 +48,7 @@ class Response {
     if (
       !utilities.validation.validateType(message, Error)
       && !utilities.validation.validateType(message, String)
-    ) throw new errors.TypeValidationError(
-      'message',
-      [
-        Error,
-        String
-      ]
-    );
+    ) throw new errors.TypeValidationError('message', [ Error, String ]);
 
     const _message = utilities.validation.validateType(message, Error)
       ? message.message
@@ -56,8 +56,8 @@ class Response {
     ;
 
     return new Response({
-      'message': _message,
-      'status': REFERENCE.ENUM.ResponseStatus.WARNING
+      message: _message,
+      status: Response.REFERENCE.ENUMERATIONS.RESPONSE_STATUS.WARNING
     });
   }
 
@@ -73,9 +73,9 @@ class Response {
       : null
     ;
 
-    this.status = utilities.validation.validateEnumeration(status, REFERENCE.ENUM.ResponseStatus)
+    this.status = utilities.validation.validateEnumeration(status, Response.REFERENCE.ENUMERATIONS.RESPONSE_STATUS)
       ? status
-      : REFERENCE.ENUM.ResponseStatus.UNKNOWN
+      : Response.REFERENCE.ENUMERATIONS.RESPONSE_STATUS.UNKNOWN
     ;
   }
 }

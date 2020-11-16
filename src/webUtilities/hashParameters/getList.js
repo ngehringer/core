@@ -12,8 +12,8 @@ const getList = () => {
     // construct a list of key / value pairs for each parameter
     .map(
       (parameter) => ({
-        'key': parameter.slice( 0, parameter.indexOf('=') ),
-        'value': parameter.slice(parameter.indexOf('=') + 1)
+        key: parameter.slice( 0, parameter.indexOf('=') ),
+        value: parameter.slice(parameter.indexOf('=') + 1)
       })
     )
   ;

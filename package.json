@@ -16,16 +16,18 @@
   "type": "module",
   "version": "1.0.0",
   "devDependencies": {
+    "ava": "^3.13.0",
     "cpy-cli": "^3.1.1",
     "del-cli": "^3.0.1",
-    "eslint": "^7.12.1"
+    "eslint": "^7.12.1",
+    "sinon": "^9.2.1"
   },
   "scripts": {
     "build": "npm run clean:build && npm run build:javascript",
-    "build:javascript": "cpy '**/*.js' '../dist/' --cwd './src' --parents",
+    "build:javascript": "cpy '**/*.js' '!**/*.test.js' '../dist/' --cwd 'src/' --parents",
     "clean": "npm run clean:build",
     "clean:build": "del-cli dist/",
     "lint": "eslint src/",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "ava"
   }
 }

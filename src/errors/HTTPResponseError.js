@@ -23,10 +23,13 @@ class HTTPResponseError extends Error {
       : null
     ;
 
-    // define the HTTP Response
+    // define the HTTP response
     this.response = (
       (typeof response === 'object')
-      && (response instanceof Response)
+      && (
+        (typeof Response === 'object')
+        && (response instanceof Response)
+      )
     )
       ? response
       : null
@@ -56,18 +59,20 @@ class HTTPResponseError extends Error {
       || (url === '')
     ) throw new Error('Invalid “url” parameter value specified.');
     this.url = url;
+  }
 
-    // define the error message
-    this.message = `Error fetching ${
+  get message() {
+    return `Error fetching ${
       (this.method === null)
         ? ''
         : `(${this.method}) `
-    }“${this.url}”: ${statusCode}${
+    }“${this.url}”: ${this.statusCode}${
       (this.statusReasonPhrase === null)
         ? ''
         : ` ${this.statusReasonPhrase}`
     }`;
   }
 }
+
 
 export default HTTPResponseError;
