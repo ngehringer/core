@@ -74,8 +74,23 @@ A web browser–hosted runtime library
 
 - ### Reference Data (`core.REFERENCE`)
 
+## Development Notes
+
+### npm Scripts
+
+- #### `build`
+    Builds the package into a single ES6 module using Rollup (configuration is located in `/rollup.config.js`).
+- #### `build:development`
+    Builds the package into a bundle of ES6 modules.
+- #### `clean`
+    Removes any build, test, etc. artifacts from the package’s folder.
+- #### `lint`
+    Runs ESLint on the package’s source files (configuration is located in `/.eslintrc.json`).
+- #### `test`
+    Executes the unit test suite using AVA (configuration is located in `/ava.config.js`).
+
 ---
 
-Designed by [Nate Gehringer](mailto:ngehringer@gmail.com).
+Written by [Nate Gehringer](mailto:ngehringer@gmail.com).
 
-© 2017 [Backwater Systems](https://backwater.systems)
+© 2017 [Backwater Systems](https://backwater.systems/)
