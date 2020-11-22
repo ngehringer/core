@@ -1,0 +1,13 @@
+{
+  "exclude": [
+    "**/*.test.js"
+  ],
+  "include": [
+    "src/**"
+  ],
+  "reporter": [
+    "html",
+    "text",
+    "text-summary"
+  ]
+}

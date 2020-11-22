@@ -79,11 +79,13 @@ A web browser–hosted runtime library
 ### npm Scripts
 
 - #### `build`
-    Builds the package into a single ES6 module using Rollup (configuration is located in `/rollup.config.js`).
+    Builds the package into a single ECMAScript Module in the `dist/` folder using Rollup (configuration is located in `/rollup.config.js`).
 - #### `build:development`
-    Builds the package into a bundle of ES6 modules.
+    Builds the package into a bundle of ECMAScript Modules in the `dist/` folder.
 - #### `clean`
-    Removes any build, test, etc. artifacts from the package’s folder.
+    Removes any build, test, code coverage, etc. artifacts from the package’s folder.
+- #### `coverage`
+    Generates a code coverage report for the unit test suite using Istanbul (configuration is located in `/.nycrc.json`). An HTML version of the report is generated in the `coverage/` folder.
 - #### `lint`
     Runs ESLint on the package’s source files (configuration is located in `/.eslintrc.json`).
 - #### `test`

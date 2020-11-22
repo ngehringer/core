@@ -20,6 +20,7 @@
     "cpy-cli": "^3.1.1",
     "del-cli": "^3.0.1",
     "eslint": "^7.12.1",
+    "nyc": "^15.1.0",
     "rollup": "^2.33.3",
     "sinon": "^9.2.1"
   },
@@ -29,9 +30,11 @@
     "build:development:javascript": "cpy '**/*.js' '!**/*.test.js' '../dist/' --cwd 'src/' --parents",
     "build:production": "npm run clean:build && npm run build:production:javascript",
     "build:production:javascript": "rollup --config rollup.config.js",
-    "clean": "npm run clean:build",
+    "clean": "npm run clean:build; npm run clean:coverage",
     "clean:build": "del-cli dist/",
+    "clean:coverage": "del-cli .nyc_output/; del-cli coverage/; del-cli temp/instrumented_src/",
+    "coverage": "npm run clean:coverage && nyc instrument --exclude '!**/*.test.js' src/ temp/instrumented_src/ && nyc ava 'temp/instrumented_src/**'",
     "lint": "eslint src/",
-    "test": "ava"
+    "test": "ava 'src/**'"
   }
 }
