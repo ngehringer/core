@@ -11,7 +11,7 @@ const TEST_FIXTURES = Object.freeze({
 });
 
 ava(
-  'core.utilities.convertToNumber – numeric string',
+  'core.utilities.conversion.convertToNumber – numeric string',
   (test) => {
     const number = convertToNumber(TEST_FIXTURES.NUMERIC_STRING);
 
@@ -22,7 +22,7 @@ ava(
 );
 
 ava(
-  'core.utilities.convertToNumber – Number',
+  'core.utilities.conversion.convertToNumber – Number',
   (test) => {
     const number = convertToNumber(TEST_FIXTURES.NUMBER);
 
@@ -31,7 +31,7 @@ ava(
 );
 
 ava(
-  'core.utilities.convertToNumber – non-numeric string',
+  'core.utilities.conversion.convertToNumber – non-numeric string',
   (test) => {
     const number = convertToNumber(TEST_FIXTURES.NON_NUMERIC_STRING);
 

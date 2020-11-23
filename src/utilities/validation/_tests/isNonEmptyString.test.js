@@ -9,7 +9,7 @@ const TEST_FIXTURES = Object.freeze({
 });
 
 ava(
-  'core.utilities.isNonEmptyString – empty string',
+  'core.utilities.validation.isNonEmptyString – empty string',
   (test) => {
     const result = isNonEmptyString(TEST_FIXTURES.EMPTY_STRING);
 
@@ -19,7 +19,7 @@ ava(
 );
 
 ava(
-  'core.utilities.isNonEmptyString – non-empty string',
+  'core.utilities.validation.isNonEmptyString – non-empty string',
   (test) => {
     const result = isNonEmptyString(TEST_FIXTURES.NON_EMPTY_STRING);
 

@@ -2,30 +2,31 @@ const validateType = (instance, type) => {
   if (typeof type !== 'function') throw new Error(`‘type’ must be a “${Function.name}”.`);
 
   return (
-    // check the prototype chain for inheritance …
+    // Function | Object: check the prototype chain for inheritance
     (instance instanceof type)
-    // … with special handling for primitive types that have wrapper classes
+    // special handling for primitive types that have wrapper classes …
     || (
+      // … BigInt
       (
         (typeof instance === 'bigint')
         && (type === BigInt)
       )
+      // … Boolean
       || (
         (typeof instance === 'boolean')
         && (type === Boolean)
       )
-      || (
-        (typeof instance === 'function')
-        && (type === Function)
-      )
+      // … Number
       || (
         (typeof instance === 'number')
         && (type === Number)
       )
+      // … String
       || (
         (typeof instance === 'string')
         && (type === String)
       )
+      // … Symbol
       || (
         (typeof instance === 'symbol')
         && (type === Symbol)

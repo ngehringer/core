@@ -2,42 +2,68 @@ import ava from 'ava';
 
 import * as errors from '../../../errors/index.js';
 import pluralize from '../pluralize.js';
+import pluralizeDictionary from '../pluralize.dictionary.js';
 
 
 const TEST_FIXTURES = Object.freeze({
-  STANDARD_NOUN: 'noun'
+  INVALID_WORD: 'No.',
+  IRREGULAR_WORD: Object.freeze({
+    PLURAL: pluralizeDictionary[ Object.keys(pluralizeDictionary)[0] ],
+    SINGULAR: Object.keys(pluralizeDictionary)[0]
+  }),
+  REGULAR_WORD: Object.freeze({
+    PLURAL: 'nouns',
+    SINGULAR: 'noun'
+  })
 });
 
 ava(
-  'core.utilities.pluralize – standard noun',
+  'core.utilities.formatting.pluralize – regular word',
   (test) => {
-    const pluralized = pluralize(TEST_FIXTURES.STANDARD_NOUN);
+    const pluralized = pluralize(TEST_FIXTURES.REGULAR_WORD.SINGULAR);
 
     test.is(typeof pluralized, 'string');
-    test.is(pluralized, `${TEST_FIXTURES.STANDARD_NOUN}s`);
+    test.is(pluralized, TEST_FIXTURES.REGULAR_WORD.PLURAL);
   }
 );
 
 ava(
-  'core.utilities.pluralize – standard noun; count = 1',
+  'core.utilities.formatting.pluralize – regular word; count = 1',
   (test) => {
-    const pluralized = pluralize(TEST_FIXTURES.STANDARD_NOUN, 1);
+    const pluralized = pluralize(TEST_FIXTURES.REGULAR_WORD.SINGULAR, 1);
 
     test.is(typeof pluralized, 'string');
-    test.is(pluralized, TEST_FIXTURES.STANDARD_NOUN);
+    test.is(pluralized, TEST_FIXTURES.REGULAR_WORD.SINGULAR);
   }
 );
 
 ava(
-  'core.utilities.pluralize – invalid parameters',
+  'core.utilities.formatting.pluralize – irregular word',
   (test) => {
-    const expectedError = new errors.TypeValidationError('word', String);
+    const pluralized = pluralize(TEST_FIXTURES.IRREGULAR_WORD.SINGULAR);
 
-    const error = test.throws(
+    test.is(typeof pluralized, 'string');
+    test.is(pluralized, TEST_FIXTURES.IRREGULAR_WORD.PLURAL);
+  }
+);
+
+ava(
+  'core.utilities.formatting.pluralize – invalid parameters',
+  (test) => {
+    const expectedError1 = new errors.TypeValidationError('word', String);
+
+    const error1 = test.throws(
       () => pluralize(null)
     );
+    test.is(typeof error1, 'object');
+    test.deepEqual(error1, expectedError1);
 
-    test.is(typeof error, 'object');
-    test.deepEqual(error, expectedError);
+    const expectedError2 = new Error('Invalid “word” parameter value specified: must contain only alphanumeric characters.');
+
+    const error2 = test.throws(
+      () => pluralize(TEST_FIXTURES.INVALID_WORD)
+    );
+    test.is(typeof error2, 'object');
+    test.deepEqual(error2, expectedError2);
   }
 );

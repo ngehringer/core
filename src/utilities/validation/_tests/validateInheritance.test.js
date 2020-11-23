@@ -11,7 +11,7 @@ const TEST_FIXTURES = Object.freeze({
 });
 
 ava(
-  'core.utilities.validateInheritance – child',
+  'core.utilities.validation.validateInheritance – child',
   (test) => {
     const result = validateInheritance(TEST_FIXTURES.CHILD, TEST_FIXTURES.PARENT);
 
@@ -21,7 +21,7 @@ ava(
 );
 
 ava(
-  'core.utilities.validateInheritance – non-child',
+  'core.utilities.validation.validateInheritance – non-child',
   (test) => {
     const result = validateInheritance(TEST_FIXTURES.NON_CHILD, TEST_FIXTURES.PARENT);
 
@@ -31,7 +31,7 @@ ava(
 );
 
 ava(
-  'core.utilities.validateInheritance – invalid parameters',
+  'core.utilities.validation.validateInheritance – invalid parameters',
   (test) => {
     const expectedError1 = new errors.TypeValidationError('parent', Object);
 

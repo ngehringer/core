@@ -3,6 +3,7 @@ import validateType from './validateType.js';
 
 
 const validateEnumeration = (value, enumeration) => {
+  // abort if the specified enumeration is not an object
   if ( !validateType(enumeration, Object) ) throw new errors.TypeValidationError('enumeration', Object);
 
   // a valid enumeration value must be a string or a number
@@ -11,6 +12,7 @@ const validateEnumeration = (value, enumeration) => {
     && !validateType(value, Number)
   ) return false;
 
+  // return a boolean indicating whether the enumeration contains a key matching the specified value
   return Object.keys(enumeration).some(
     (key) => (enumeration[key] === value)
   );

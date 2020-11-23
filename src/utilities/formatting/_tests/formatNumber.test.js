@@ -10,7 +10,7 @@ const TEST_FIXTURES = Object.freeze({
 });
 
 ava(
-  'core.utilities.formatNumber – number',
+  'core.utilities.formatting.formatNumber – number',
   (test) => {
     const formattedNumber = formatNumber(TEST_FIXTURES.NUMBER);
 
@@ -20,7 +20,7 @@ ava(
 );
 
 ava(
-  'core.utilities.formatNumber – null',
+  'core.utilities.formatting.formatNumber – null',
   (test) => {
     const formattedNumber = formatNumber(null);
 
@@ -30,7 +30,7 @@ ava(
 );
 
 ava(
-  'core.utilities.formatNumber – non-number',
+  'core.utilities.formatting.formatNumber – non-number',
   (test) => {
     const expectedError = new errors.TypeValidationError('number', Number);
 

@@ -11,7 +11,7 @@ const TEST_FIXTURES = Object.freeze({
 });
 
 ava(
-  'core.utilities.validateEnumeration – valid value',
+  'core.utilities.validation.validateEnumeration – valid value',
   (test) => {
     const result = validateEnumeration(TEST_FIXTURES.VALID_VALUE, TEST_FIXTURES.ENUMERATION);
 
@@ -21,7 +21,7 @@ ava(
 );
 
 ava(
-  'core.utilities.validateEnumeration – invalid value',
+  'core.utilities.validation.validateEnumeration – invalid value',
   (test) => {
     const result = validateEnumeration(TEST_FIXTURES.INVALID_VALUE, TEST_FIXTURES.ENUMERATION);
 
@@ -31,7 +31,7 @@ ava(
 );
 
 ava(
-  'core.utilities.validateEnumeration – invalid value type',
+  'core.utilities.validation.validateEnumeration – invalid value type',
   (test) => {
     const result = validateEnumeration(null, TEST_FIXTURES.ENUMERATION);
 
@@ -41,7 +41,7 @@ ava(
 );
 
 ava(
-  'core.utilities.validateEnumeration – invalid parameters',
+  'core.utilities.validation.validateEnumeration – invalid parameters',
   (test) => {
     const expectedError = new errors.TypeValidationError('enumeration', Object);
 

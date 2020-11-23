@@ -9,7 +9,7 @@ const TEST_FIXTURES = Object.freeze({
 });
 
 ava(
-  'core.utilities.convertToDate – ISO 8601 string',
+  'core.utilities.conversion.convertToDate – ISO 8601 string',
   (test) => {
     const date = convertToDate(TEST_FIXTURES.ISO_8601_STRING);
 
@@ -20,7 +20,7 @@ ava(
 );
 
 ava(
-  'core.utilities.convertToDate – Date',
+  'core.utilities.conversion.convertToDate – Date',
   (test) => {
     const date = convertToDate(TEST_FIXTURES.ISO_8601_DATE);
 
