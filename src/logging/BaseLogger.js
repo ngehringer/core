@@ -1,4 +1,6 @@
+import * as errors from '../errors/index.js';
 import * as utilities from '../utilities/index.js';
+import LogItem from './LogItem.js';
 import REFERENCE from './REFERENCE.js';
 
 
@@ -13,80 +15,44 @@ class BaseLogger {
     });
   }
 
-  static _constructLogItem({
-    data,
-    logLevel = BaseLogger.DEFAULTS.LOG_LEVEL,
-    sourceID = BaseLogger.DEFAULTS.SOURCE_ID,
-    verbose = BaseLogger.DEFAULTS.VERBOSE
-  }) {
-    // define the date and time of the log item
-    const time = new Date();
-
-    // validate and define the log level of the log item
-    const _logLevel = utilities.validation.validateEnumeration(logLevel, REFERENCE.ENUMERATIONS.LOG_LEVEL)
-      ? logLevel
-      : BaseLogger.DEFAULTS.LOG_LEVEL
-    ;
-
-    // validate and define the source ID of the log item
-    const _sourceID = utilities.validation.isNonEmptyString(sourceID)
-      ? sourceID
-      : null
-    ;
-
-    // determine if verbose logging is enabled (default: false)
-    const _verbose = utilities.validation.validateType(verbose, Boolean)
-      ? verbose
-      : BaseLogger.DEFAULTS.VERBOSE
-    ;
-
-    // define the log message – depending on the type of the logged data – as …
-    let message = null;
-    // … string: itself
-    if ( utilities.validation.validateType(data, String) ) {
-      message = data;
-    }
-    // … object: stringified JSON of the object
-    else if ( utilities.validation.validateType(data, Object) ) {
-      message = JSON.stringify(data);
-    }
-    // … Error: …
-    else if ( utilities.validation.validateType(data, Error) ) {
-      message = _verbose
-        // … (verbose) the error type name, message, and stack trace
-        ? `(${data.name}) ${data.message}${utilities.validation.isNonEmptyString(data.stack) ? `\n${data.stack}` : ''}`
-        // … (non-verbose) the error message
-        : `${data.message}`
-      ;
-    }
-
-    return {
-      data: data,
-      logLevel: _logLevel,
-      message: message,
-      sourceID: _sourceID,
-      time: time
-    };
-  }
-
   static _logInternalError(error) {
     // define an ISO 8601–compliant timestamp for the error
     const timestamp = new Date().toISOString();
 
-    // define the message
-    const message = utilities.validation.validateType(error, Error)
-      ? `“${error.message}”`
-      : '[null]'
-    ;
-
-    // extract the stack from the error
-    const stack = utilities.validation.validateType(error, Error)
+    // extract the stack trace from the error
+    const stack = utilities.validation.isNonEmptyString(error.stack)
       ? `\n${error.stack}`
       : ''
     ;
 
     // write a message describing the error to the console
-    console.log(`[${timestamp}] {${REFERENCE.ENUMERATIONS.LOG_LEVEL.CRITICAL_ERROR}|${this.CLASS_NAME}} ${message}${stack}`);
+    console.log(`[${timestamp}] {${REFERENCE.ENUMERATIONS.LOG_LEVEL.CRITICAL_ERROR}|${this.CLASS_NAME}} ${error.message}${stack}`);
+  }
+
+  static log({
+    data,
+    logLevel = BaseLogger.DEFAULTS.LOG_LEVEL,
+    sourceID = BaseLogger.DEFAULTS.SOURCE_ID,
+    verbose = BaseLogger.DEFAULTS.VERBOSE
+  }) {
+    // ensure the extending class implements a “_log” function
+    if ( !utilities.validation.validateType(this._log, Function) ) throw new errors.ImplementationError('_log', this.CLASS_NAME);
+
+    try {
+      // construct a log item with the specified parameters
+      const logItem = new LogItem({
+        data: data,
+        logLevel: logLevel,
+        sourceID: sourceID,
+        verbose: verbose
+      });
+
+      // invoke the extending class’s “_log” function with the log item as its parameter
+      this._log(logItem);
+    }
+    catch (error) {
+      this._logInternalError(error);
+    }
   }
 
   static logCriticalError({ ...rest }) {

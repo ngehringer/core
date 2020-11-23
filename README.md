@@ -27,6 +27,8 @@ A web browser–hosted runtime library
 
     - #### `BaseLogger`
     - #### `ConsoleLogger`
+    - #### `LogItem`
+    - #### `NullLogger`
     - #### `REFERENCE`
 
 - ### Utilities (`core.utilities`)

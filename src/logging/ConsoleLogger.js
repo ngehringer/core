@@ -4,30 +4,12 @@ import BaseLogger from './BaseLogger.js';
 class ConsoleLogger extends BaseLogger {
   static get CLASS_NAME() { return `@backwater-systems/core.logging.${ConsoleLogger.name}`; }
 
-  static log({
-    data,
-    logLevel = BaseLogger.DEFAULTS.LOG_LEVEL,
-    sourceID = BaseLogger.DEFAULTS.SOURCE_ID,
-    verbose = BaseLogger.DEFAULTS.VERBOSE
-  }) {
-    try {
-      // construct a log item
-      const logItem = super._constructLogItem({
-        data,
-        logLevel,
-        sourceID,
-        verbose
-      });
+  static _log(logItem) {
+    // transform the log item into text
+    const text = `[${logItem.time.toISOString()}] {${logItem.logLevel}${(logItem.sourceID === null) ? '' : `|${logItem.sourceID}`}} ${(logItem.message === null) ? '[null]' : logItem.message}`;
 
-      // transform the log item into text
-      const text = `[${logItem.time.toISOString()}] {${logItem.logLevel}${(logItem.sourceID === null) ? '' : `|${logItem.sourceID}`}} ${(logItem.message === null) ? '[null]' : logItem.message}`;
-
-      // write the text to the console
-      console.log(text);
-    }
-    catch (error) {
-      super._logInternalError(error);
-    }
+    // write the text to the console
+    console.log(text);
   }
 }
 

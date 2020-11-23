@@ -10,7 +10,7 @@ const TEST_FIXTURES = Object.freeze({
   DEBUG: true,
   EVENT_PARAMETERS: {},
   EVENT_TYPE: 'test_event',
-  LOGGER: logging.ConsoleLogger
+  LOGGER: logging.NullLogger
 });
 
 ava(
