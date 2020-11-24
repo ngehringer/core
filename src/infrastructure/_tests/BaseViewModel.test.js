@@ -11,7 +11,7 @@ const TEST_FIXTURES = Object.freeze({
 
 const getTestViewModel = ({
   getModelFake
-}) => class extends BaseViewModel {
+}) => class TestViewModel extends BaseViewModel {
   getModel(data) {
     getModelFake?.(data);
 

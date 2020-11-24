@@ -1,9 +1,15 @@
-import * as errors from '../errors/index.js';
 import * as utilities from '../utilities/index.js';
 
 
 class Response {
   static get CLASS_NAME() { return `@backwater-systems/core.infrastructure.${Response.name}`; }
+
+  static get DEFAULTS() {
+    return Object.freeze({
+      MESSAGE: null,
+      STATUS: Response.REFERENCE.ENUMERATIONS.RESPONSE_STATUS.UNKNOWN
+    });
+  }
 
   static get REFERENCE() {
     return Object.freeze({
@@ -19,25 +25,13 @@ class Response {
   }
 
   static error(message) {
-    if (
-      !utilities.validation.validateType(message, Error)
-      && !utilities.validation.validateType(message, String)
-    ) throw new errors.TypeValidationError('message', [ Error, String ]);
-
-    const _message = utilities.validation.validateType(message, Error)
-      ? message.message
-      : message
-    ;
-
     return new Response({
-      message: _message,
+      message: message,
       status: Response.REFERENCE.ENUMERATIONS.RESPONSE_STATUS.ERROR
     });
   }
 
   static ok(message) {
-    if ( !utilities.validation.validateType(message, String) ) throw new errors.TypeValidationError('message', String);
-
     return new Response({
       message: message,
       status: Response.REFERENCE.ENUMERATIONS.RESPONSE_STATUS.OK
@@ -45,37 +39,32 @@ class Response {
   }
 
   static warning(message) {
-    if (
-      !utilities.validation.validateType(message, Error)
-      && !utilities.validation.validateType(message, String)
-    ) throw new errors.TypeValidationError('message', [ Error, String ]);
-
-    const _message = utilities.validation.validateType(message, Error)
-      ? message.message
-      : message
-    ;
-
     return new Response({
-      message: _message,
+      message: message,
       status: Response.REFERENCE.ENUMERATIONS.RESPONSE_STATUS.WARNING
     });
   }
 
   constructor({
-    message,
-    status
+    message = Response.DEFAULTS.MESSAGE,
+    status = Response.DEFAULTS.STATUS
   }) {
     this.id = utilities.generateUUID();
     this.time = new Date();
 
-    this.message = utilities.validation.validateType(message, String)
-      ? message
-      : null
-    ;
+    if ( utilities.validation.validateType(message, Error) ) {
+      this.message = message.message;
+    }
+    else if ( utilities.validation.validateType(message, String) ) {
+      this.message = message;
+    }
+    else {
+      this.message = Response.DEFAULTS.MESSAGE;
+    }
 
     this.status = utilities.validation.validateEnumeration(status, Response.REFERENCE.ENUMERATIONS.RESPONSE_STATUS)
       ? status
-      : Response.REFERENCE.ENUMERATIONS.RESPONSE_STATUS.UNKNOWN
+      : Response.DEFAULTS.STATUS
     ;
   }
 }

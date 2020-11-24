@@ -16,7 +16,7 @@ class EventSource {
   constructor({
     debug = EventSource.DEFAULTS.DEBUG,
     logger = EventSource.DEFAULTS.LOGGER
-  }) {
+  } = {}) {
     /**
      * Indicates if debug mode is enabled
      * @type {boolean}
@@ -36,13 +36,16 @@ class EventSource {
     /**
      * The process logger
      */
-    this.logger = utilities.validation.validateInheritance(logger, logging.BaseLogger)
+    this.logger = (
+      utilities.validation.validateType(logger, Function)
+      && utilities.validation.validateInheritance(logger, logging.BaseLogger)
+    )
       ? logger
       : EventSource.DEFAULTS.LOGGER
     ;
 
     /**
-     * A list of the registered event handlers, grouped by event type
+     * A dictionary of registered event handlers (key: event type name; value: event handler function list)
      * @type {Object}
      */
     this.eventHandlerRegister = {};
@@ -59,16 +62,18 @@ class EventSource {
     // ensure the specified event handler is valid
     if ( !utilities.validation.validateType(eventHandler, Function) ) throw new errors.TypeValidationError('eventHandler', Function);
 
-    // create the event type’s handler list, if necessary
+    // create the event type’s handler list in the registry, if necessary
     if ( !Array.isArray(this.eventHandlerRegister[eventType]) ) {
       this.eventHandlerRegister[eventType] = [];
     }
+
+    // define the specified event type’s handler list
     const eventHandlerList = this.eventHandlerRegister[eventType];
 
-    // ensure the specified handler is not already registered for the specified event type
-    if (eventHandlerList.indexOf(eventHandler) !== -1) throw new Error(`The specified handler is already registered for “${eventType}” events.`);
+    // abort if the specified event handler is already registered for the specified event type
+    if ( eventHandlerList.includes(eventHandler) ) throw new Error(`The specified handler is already registered for “${eventType}” events.`);
 
-    // add the handler to the register for the specified event type
+    // add the specified event handler to the register for the specified event type
     eventHandlerList.push(eventHandler);
   }
 
@@ -125,17 +130,17 @@ class EventSource {
     // ensure the specified event handler is valid
     if ( !utilities.validation.validateType(eventHandler, Function) ) throw new errors.TypeValidationError('eventHandler', Function);
 
-    const eventHandlerList = this.eventHandlerRegister[eventType];
-    if ( Array.isArray(eventHandlerList) ) {
-      // attempt to locate the specified event handler in the register
-      const index = eventHandlerList.indexOf(eventHandler);
+    // define the event type’s handler list from the register
+    const eventHandlerList = this.eventHandlerRegister[eventType] ?? [];
 
-      // ensure the specified event handler is registered for the specified event type
-      if (index === -1) throw new Error(`The specified handler is not registered for “${eventType}” events.`);
+    // attempt to locate the specified event handler in the register
+    const index = eventHandlerList.indexOf(eventHandler);
 
-      // remove the handler from the register for the specified event type
-      eventHandlerList.splice(index, 1);
-    }
+    // ensure the specified event handler is registered for the specified event type
+    if (index === -1) throw new Error(`The specified handler is not registered for “${eventType}” events.`);
+
+    // remove the handler from the register for the specified event type
+    eventHandlerList.splice(index, 1);
   }
 }
 

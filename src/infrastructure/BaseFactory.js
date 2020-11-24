@@ -5,52 +5,57 @@ import * as utilities from '../utilities/index.js';
 class BaseFactory {
   static get CLASS_NAME() { return `@backwater-systems/core.infrastructure.${BaseFactory.name}`; }
 
-  static get typeList() {
-    // ensure the extending class implements a “_baseType” property
+  static get typeRegister() {
+    // ensure the extending factory implements a “_baseType” property
     if ( !utilities.validation.validateType(this._baseType, Function) ) throw new errors.ImplementationError('_baseType', this.CLASS_NAME);
 
-    // initialize the registered type list, if necessary
-    if ( !utilities.validation.validateType(this._typeList, Object) ) {
-      // attempt to seed the registered type list with the extending class’s “_initialTypeList” property
-      if ( utilities.validation.validateType(this._initialTypeList, Object) ) {
+    // initialize the type register cache, if necessary
+    if ( !utilities.validation.validateType(this._typeRegister, Object) ) {
+      // seed the type register cache with the extending class’s “_initialTypeRegister” property, if it is valid …
+      if ( utilities.validation.validateType(this._initialTypeRegister, Object) ) {
         // ensure all of the initially-registered types extend the factory’s base type
-        const invalidTypeNameList = Object.keys(this._initialTypeList).filter(
-          (typeName) => !utilities.validation.validateInheritance(this._initialTypeList[typeName], this._baseType)
+        const invalidTypeNameList = Object.keys(this._initialTypeRegister).filter(
+          (typeName) => !utilities.validation.validateInheritance(this._initialTypeRegister[typeName], this._baseType)
         );
         if (invalidTypeNameList.length !== 0) {
-          const implementationErrors = invalidTypeNameList.map(
+          const typeValidationErrors = invalidTypeNameList.map(
             (typeName) => new errors.TypeValidationError(typeName, this._baseType)
           );
-          throw implementationErrors;
+          if (typeValidationErrors.length === 1) throw typeValidationErrors[0];
+          else throw new Error(
+            typeValidationErrors
+              .map( (typeValidationError) => typeValidationError.message )
+              .join(' ')
+          );
         }
 
-        // build the type register from the factory’s initial type list
-        this._typeList = { ...this._initialTypeList };
+        // populate the type register cache with the factory’s initial type register
+        this._typeRegister = { ...this._initialTypeRegister };
       }
+      // … otherwise, initialize an empty type register cache
       else {
-        this._typeList = {};
+        this._typeRegister = {};
       }
     }
 
-    return this._typeList;
+    return this._typeRegister;
   }
 
   static _getType(typeName) {
-    const type = this.typeList[typeName] || null;
+    const type = this.typeRegister[typeName] ?? null;
 
     return type;
   }
 
-  static create(typeName, options) {
+  static create(typeName, ...rest) {
     if ( !utilities.validation.isNonEmptyString(typeName) ) throw new errors.TypeValidationError('typeName', String);
-    if ( !utilities.validation.validateType(options, Object) && (options !== null) ) throw new errors.TypeValidationError('options', Object);
 
     // retrieve the specified type’s class
     const Type = this._getType(typeName);
     if (Type === null) throw new Error(`“${typeName}” is not a registered type.`);
 
     // create an instance of the specified class
-    const instance = new Type(options);
+    const instance = new Type(...rest);
 
     return instance;
   }
@@ -69,7 +74,7 @@ class BaseFactory {
     if (type !== null) throw new Error(`“${typeName}” is already a registered type.`);
 
     // add the type to the registry
-    this.typeList[typeName] = typeClass;
+    this.typeRegister[typeName] = typeClass;
   }
 
   static unregisterType(typeName) {
@@ -80,7 +85,7 @@ class BaseFactory {
     if (type === null) throw new Error(`“${typeName}” is not a registered type.`);
 
     // remove the type from the registry
-    delete this.typeList[typeName];
+    delete this.typeRegister[typeName];
   }
 }
 
