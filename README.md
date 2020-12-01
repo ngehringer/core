@@ -59,9 +59,12 @@ A web browser–hosted runtime library
 
         - #### `delete`
         - #### `generateQueryString`
+        - #### `generateRequest`
         - #### `get`
         - #### `head`
-        - #### `parseResponse`
+        - #### `options`
+        - #### `parseResponseBody`
+        - #### `patch`
         - #### `post`
         - #### `put`
         - #### `sendRequest`
@@ -80,7 +83,7 @@ A web browser–hosted runtime library
 
 ### npm Scripts
 
-- #### `build`
+- #### `build` (alias: `build:production`)
     Builds the package into a single ECMAScript Module in the `dist/` folder using Rollup (configuration is located in `/rollup.config.js`).
 - #### `build:development`
     Builds the package into a bundle of ECMAScript Modules in the `dist/` folder.

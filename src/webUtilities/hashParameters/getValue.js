@@ -6,10 +6,10 @@ import getList from './getList.js';
 const getValue = (key) => {
   if ( !utilities.validation.isNonEmptyString(key, String) ) throw new errors.TypeValidationError('key', String);
 
-  // get a list of the hash fragment’s parameters (key / value pairs)
-  const hashParameterList = getList();
+  // get a list of the URI fragment’s parameters as key / value pairs
+  const keyValueList = getList();
   // extract the first parameter that matches the specified key, if any
-  const parameter = hashParameterList.find( (_parameter) => (_parameter.key === key) );
+  const parameter = keyValueList.find( (_parameter) => (_parameter.key === key) );
   // extract the parameter’s value
   const parameterValue = utilities.validation.validateType(parameter, Object)
     ? parameter.value

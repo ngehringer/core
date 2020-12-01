@@ -1,4 +1,5 @@
 import ava from 'ava';
+import * as nodeFetch from 'node-fetch';
 
 import REFERENCE from '../../REFERENCE/index.js';
 import HTTPResponseError from '../HTTPResponseError.js';
@@ -6,11 +7,21 @@ import HTTPResponseError from '../HTTPResponseError.js';
 
 const TEST_FIXTURES = Object.freeze({
   METHOD: REFERENCE.ENUMERATIONS.HTTP_METHOD.HEAD,
-  RESPONSE: {},
+  RESPONSE: new nodeFetch.Response(),
+  RESPONSE_INVALID: {},
   STATUS_CODE: REFERENCE.ENUMERATIONS.HTTP_STATUS_CODE['200_OK'],
   STATUS_REASON_PHRASE: 'OK',
   URL: 'https://localhost'
 });
+
+ava.before(
+  'core.errors.HTTPResponseError – test environment setup',
+  (t) => {
+    // use “node-fetch” to populate the following in the global scope …
+    // - `Response`
+    global.Response = nodeFetch.Response;
+  }
+);
 
 ava(
   'core.errors.HTTPResponseError',
@@ -29,7 +40,7 @@ ava(
     test.is(httpResponseError.message, `Error fetching (${TEST_FIXTURES.METHOD}) “${TEST_FIXTURES.URL}”: ${TEST_FIXTURES.STATUS_CODE} ${TEST_FIXTURES.STATUS_REASON_PHRASE}`);
     test.is(httpResponseError.name, HTTPResponseError.name);
     test.is(httpResponseError.method, TEST_FIXTURES.METHOD);
-    test.is(httpResponseError.response, null);
+    test.is(httpResponseError.response, TEST_FIXTURES.RESPONSE);
     test.is(httpResponseError.statusCode, TEST_FIXTURES.STATUS_CODE);
     test.is(httpResponseError.statusReasonPhrase, TEST_FIXTURES.STATUS_REASON_PHRASE);
     test.is(httpResponseError.url, TEST_FIXTURES.URL);
@@ -69,6 +80,7 @@ ava(
 
     const error2 = test.throws(
       () => new HTTPResponseError({
+        response: TEST_FIXTURES.RESPONSE_INVALID,
         statusCode: TEST_FIXTURES.STATUS_CODE
       })
     );

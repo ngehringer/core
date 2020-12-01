@@ -3,35 +3,41 @@ import * as utilities from '../../utilities/index.js';
 import getList from './getList.js';
 
 
-const setValue = (valueList) => {
-  // ensure the specified list of parameters is well-formed
+const setValue = (keyValueDictionary) => {
+  // abort if the specified list of parameters is not …
   if (
-    !utilities.validation.validateType(valueList, Object)
-    || !Object.keys(valueList).every( (key) => utilities.validation.isNonEmptyString(key) )
-    || !Object.keys(valueList).every(
-      (key) => (
-        utilities.validation.isNonEmptyString(valueList[key])
-        || (valueList[key] === null)
+    // … an object …
+    !utilities.validation.validateType(keyValueDictionary, Object)
+    // … where every …
+    || !Object.entries(keyValueDictionary).every(
+      ([ key, value ]) => (
+        // … key is a non-empty string …
+        utilities.validation.isNonEmptyString(key)
+        // … and, value is …
+        && (
+          // … a non-empty string …
+          utilities.validation.isNonEmptyString(value)
+          // … or null
+          || (value === null)
+        )
       )
     )
   ) throw new errors.TypeValidationError('valueList', Object);
 
-  // get a list of the hash fragment’s parameters (key / value pairs)
-  const hashParameterList = getList();
+  // get a list of the URI fragment’s parameters as key / value pairs
+  const keyValueList = getList();
 
-  // iterate over all the specified key / value pairs
-  for ( const key of Object.keys(valueList) ) {
-    const value = valueList[key];
-
+  // iterate over all of the key / value pairs
+  for ( const [ key, value ] of Object.entries(keyValueDictionary) ) {
     // extract the first parameter that matches the specified key, if any
-    const parameter = hashParameterList.find( (_parameter) => (_parameter.key === key) );
+    const parameter = keyValueList.find( (_parameter) => (_parameter.key === key) );
 
     // if a parameter with the specified key already exists, and …
     if ( utilities.validation.validateType(parameter, Object) ) {
       // … the specified value is “null”, remove the parameter …
       if (value === null) {
-        const parameterIndex = hashParameterList.indexOf(parameter);
-        hashParameterList.splice(parameterIndex, 1);
+        const parameterIndex = keyValueList.indexOf(parameter);
+        keyValueList.splice(parameterIndex, 1);
       }
       // … otherwise, update the parameter’s value
       else {
@@ -40,7 +46,7 @@ const setValue = (valueList) => {
     }
     // … otherwise, as long as it isn’t “null”, add a new parameter to the list
     else if (value !== null) {
-      hashParameterList.push({
+      keyValueList.push({
         key: key,
         value: value
       });
@@ -48,12 +54,15 @@ const setValue = (valueList) => {
   }
 
   // construct a string to represent the parameters
-  const hash = hashParameterList
+  const hash = keyValueList
     .map( (_parameter) => `${_parameter.key}=${_parameter.value}` )
     .join('&')
   ;
-  // set the hash fragment
+
+  // set the URI fragment
   window.location.hash = hash;
+
+  return hash;
 };
 
 

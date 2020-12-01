@@ -27,7 +27,7 @@ class HTTPResponseError extends Error {
     this.response = (
       (typeof response === 'object')
       && (
-        (typeof Response === 'object')
+        (typeof Response === 'function')
         && (response instanceof Response)
       )
     )

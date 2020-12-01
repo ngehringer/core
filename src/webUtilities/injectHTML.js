@@ -3,6 +3,7 @@ import * as logging from '../logging/index.js';
 import * as utilities from '../utilities/index.js';
 
 
+/** the process’s defaults */
 const DEFAULTS = Object.freeze({
   DEBUG: false,
   LOGGER: logging.ConsoleLogger,
@@ -10,8 +11,13 @@ const DEFAULTS = Object.freeze({
   SOURCE_ID: null
 });
 
+/** the process’s ID */
 const PROCESS_ID = '@backwater-systems/core.webUtilities.injectHTML';
 
+/**
+  * Injects HTML into the specified target, replacing or appending to the contents.
+  * **WARNING:** `<script>` blocks in the HTML are executed; do not inject HTML from untrusted sources.
+  */
 const injectHTML = ({
   debug = DEFAULTS.DEBUG,
   html,
@@ -20,39 +26,49 @@ const injectHTML = ({
   sourceID = DEFAULTS.SOURCE_ID,
   target
 }) => {
-  // define whether debug mode is enabled
+  /** whether debug mode is enabled */
   const _debug = utilities.validation.validateType(debug, Boolean)
     ? debug
     : DEFAULTS.DEBUG
   ;
 
-  // define the logger
-  const _logger = utilities.validation.validateInheritance(logger, logging.BaseLogger)
+  /** the process’s logger */
+  const _logger = (
+    utilities.validation.validateType(logger, Object)
+    && utilities.validation.validateInheritance(logger, logging.BaseLogger)
+  )
     ? logger
     : DEFAULTS.LOGGER
   ;
 
-  // define whether the target’s contents should be replaced or appended
+  /** whether the target’s contents should be replaced or appended */
   const _replace = utilities.validation.validateType(replace, Boolean)
     ? replace
-    : DEFAULTS.DEBUG
+    : DEFAULTS.REPLACE
   ;
 
-  // get a reference to the DOM injection target
+  /** the process’s logging source ID */
+  const _sourceID = utilities.validation.isNonEmptyString(sourceID)
+    ? `${PROCESS_ID} @ “${sourceID}”`
+    : PROCESS_ID
+  ;
+
+  /** the DOM injection target */
   let targetElement = null;
   // ‘target’ is a “string” …
   if ( utilities.validation.isNonEmptyString(target) ) {
     // … looks like it’s an HTML ID
     if ( !target.match(/#.*/) ) throw new Error(`“${target}” is not an HTML ID.`);
     targetElement = document.querySelector(`${target}`);
-    if (targetElement === null) throw new Error(`“${target}“ does not exist.`);
+    if (targetElement === null) throw new Error(`“${target}” does not exist.`);
   }
   // ‘target’ is an “Element”
   else if ( utilities.validation.validateType(target, Element) ) {
     targetElement = target;
   }
-  else throw new Error('Invalid “target” parameter value specified: must be a “string” (HTML ID) or an “Element”.');
+  else throw new errors.TypeValidationError('target', [ String, Element ]);
 
+  // abort if the specified “html” parameter value is not a non-empty string
   if ( !utilities.validation.isNonEmptyString(html) ) throw new errors.TypeValidationError('html', String);
 
   // inject the response into the DOM by …
@@ -65,17 +81,19 @@ const injectHTML = ({
     targetElement.insertAdjacentHTML('beforeend', html);
   }
 
-  // attempt to execute any JavaScript blocks contained in the HTML
+  // attempt to execute any JavaScript <script> nodes contained in the HTML
 
-  // create a transient DOM element
+  /** a transient DOM element for extracting the text of the `<script>` nodes contained in the HTML */
   const htmlElement = document.createElement('div');
   // populate the transient element with the response’s HTML
   htmlElement.innerHTML = html;
-  // extract the “<script>” nodes from the transient element
+
+  /** the `<script>` nodes contained in the HTML */
   const scriptNodeList = Array.from(
     htmlElement.querySelectorAll('script')
   );
-  // extract the text content of the “<script>” nodes
+
+  /** the text of the `<script>` nodes contained in the HTML */
   const scriptTextList = scriptNodeList
     // filter out scripts that are empty or all whitespace
     .filter(
@@ -85,40 +103,55 @@ const injectHTML = ({
         if (_debug) {
           _logger.logDebug({
             data: `Parsing script (${utilities.formatting.formatNumber(index + 1)} / ${utilities.formatting.formatNumber(scriptNodeList.length)}) …`,
-            sourceID: PROCESS_ID,
+            sourceID: _sourceID,
             verbose: _debug
           });
         }
 
-        // determine whether the script is valid (is not only whitespace)
-        const validScript = (/^\s*$/).test(scriptText);
+        /** whether the script is valid (negated – RegExp match: empty or contains only whitespace characters) */
+        const validScript = !(/^\s*$/).test(scriptText);
 
         if (!validScript) {
           _logger.logWarning({
             data: `Script ${utilities.formatting.formatNumber(index + 1)} is empty or contains only whitespace.`,
-            sourceID: PROCESS_ID,
+            sourceID: _sourceID,
             verbose: _debug
           });
         }
 
-      return validScript;
-    })
+        return validScript;
+      }
+    )
     // extract the “<script>” node’s text content
     .map(
       (scriptNode) => scriptNode.textContent
     )
   ;
 
-  // execute the scripts
-  for (const scriptText of scriptTextList) {
+  // execute the scripts serially, in the order that they occur in the markup
+  for (
+    // index: the ordinal position of the script in the HTML
+    // scriptText: the text of the script
+    const [ index, scriptText ] of Object.entries(scriptTextList)
+  ) {
+    if (_debug) {
+      _logger.logDebug({
+        data: `Executing script (${utilities.formatting.formatNumber(Number(index) + 1)} / ${utilities.formatting.formatNumber(scriptTextList.length)}) …`,
+        sourceID: _sourceID,
+        verbose: _debug
+      });
+    }
+
+    // execute the script …
     try {
-      eval(scriptText);
+      // <https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/eval#Never_use_eval!>
+      Function(`"use strict";${scriptText}`)();
     }
     catch (error) {
-      // log errors caused by injected script blocks
+      // … logging and consuming any errors thrown during execution
       _logger.logError({
         data: error,
-        sourceID: `${PROCESS_ID} (injected script block${(sourceID === null) ? '' : ` @ “${sourceID}”`})`,
+        sourceID: `${_sourceID} (injected script ${utilities.formatting.formatNumber(Number(index) + 1)} / ${utilities.formatting.formatNumber(scriptTextList.length)})`,
         verbose: _debug
       });
     }
@@ -127,3 +160,8 @@ const injectHTML = ({
 
 
 export default injectHTML;
+export {
+  DEFAULTS,
+  PROCESS_ID,
+  injectHTML
+};
