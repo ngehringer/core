@@ -10,6 +10,7 @@ ava(
     test.is(typeof errors.EnumerationValidationError, 'function');
     test.is(typeof errors.HTTPResponseError, 'function');
     test.is(typeof errors.ImplementationError, 'function');
+    test.is(typeof errors.InvalidParameterValueError, 'function');
     test.is(typeof errors.ItemRetrievalError, 'function');
     test.is(typeof errors.TypeValidationError, 'function');
   }

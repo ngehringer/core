@@ -11,6 +11,7 @@ A web browser–hosted runtime library
     - #### `EnumerationValidationError`
     - #### `HTTPResponseError`
     - #### `ImplementationError`
+    - #### `InvalidParameterValueError`
     - #### `ItemRetrievalError`
     - #### `TypeValidationError`
 
