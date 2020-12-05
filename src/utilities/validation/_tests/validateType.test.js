@@ -1,5 +1,6 @@
 import ava from 'ava';
 
+import * as errors from '../../../errors/index.js';
 import validateType from '../validateType.js';
 
 
@@ -105,7 +106,7 @@ ava(
 ava(
   'core.utilities.validation.validateType – invalid parameters',
   (test) => {
-    const expectedError = new Error(`‘type’ must be a “${Function.name}”.`);
+    const expectedError = new errors.TypeValidationError('type', Function);
 
     const error = test.throws(
       () => validateType(TEST_FIXTURES.INSTANCE)

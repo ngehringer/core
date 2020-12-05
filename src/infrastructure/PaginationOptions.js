@@ -1,3 +1,4 @@
+import * as errors from '../errors/index.js';
 import * as utilities from '../utilities/index.js';
 
 
@@ -35,7 +36,10 @@ class PaginationOptions {
       if (
         !Number.isInteger(_pageSize)
         || (_pageSize < 1)
-      ) throw new Error('‘pageSize’ is not a positive integer.');
+      ) throw new errors.InvalidParameterValueError({
+        parameterName: 'pageSize',
+        reason: 'not a positive integer'
+      });
 
       this.pageSize = _pageSize;
     }
@@ -61,7 +65,10 @@ class PaginationOptions {
       if (
         !Number.isInteger(_startIndex)
         || (_startIndex < 0)
-      ) throw new Error('‘startIndex’ is not a positive integer.');
+      ) throw new errors.InvalidParameterValueError({
+        parameterName: 'startIndex',
+        reason: 'not a positive integer'
+      });
 
       this.startIndex = _startIndex;
     }

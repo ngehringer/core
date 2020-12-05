@@ -232,13 +232,14 @@ ava(
 ava(
   'core.webUtilities.ajax.sendRequest – errors',
   async (t) => {
-    const expectedError1 = new Error(
-      `‘httpMethod’ must be { ${
+    const expectedError1 = new errors.InvalidParameterValueError({
+      parameterName: 'httpMethod',
+      reason: `must be { ${
         Object.values(REFERENCE.ENUMERATIONS.HTTP_METHOD)
           .map( (__httpMethod) => `“${__httpMethod}”` )
           .join(' | ')
-      } }.`
-    );
+      } }`
+    });
 
     const error1 = await t.throwsAsync(
       () => sendRequest.default({

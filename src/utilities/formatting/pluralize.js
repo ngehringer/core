@@ -8,7 +8,10 @@ const pluralize = (word, count) => {
   if ( !validation.validateType(word, String) ) throw new errors.TypeValidationError('word', String);
 
   // abort if the specified ‘word’ parameter is not entirely composed of alphanumeric (/\w/) characters
-  if ( !(/^\w+$/).test(word) ) throw new Error('Invalid “word” parameter value specified: must contain only alphanumeric characters.');
+  if ( !(/^\w+$/).test(word) ) throw new errors.InvalidParameterValueError({
+    parameterName: 'word',
+    reason: 'must contain only alphanumeric characters'
+  });
 
   // define the plurality count …
   const _count = validation.isNumber(count)

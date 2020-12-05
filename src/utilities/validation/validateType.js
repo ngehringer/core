@@ -1,5 +1,8 @@
+import * as errors from '../../errors/index.js';
+
+
 const validateType = (instance, type) => {
-  if (typeof type !== 'function') throw new Error(`‘type’ must be a “${Function.name}”.`);
+  if (typeof type !== 'function') throw new errors.TypeValidationError('type', Function);
 
   return (
     // Function | Object: check the prototype chain for inheritance

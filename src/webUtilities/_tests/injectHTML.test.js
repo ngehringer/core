@@ -87,7 +87,10 @@ ava(
 ava(
   'core.webUtilities.injectHTML – invalid parameters',
   (t) => {
-    const expectedError1 = new Error(`“${TEST_FIXTURES.TARGET_HTML_ID_INVALID}” is not an HTML ID.`);
+    const expectedError1 = new errors.InvalidParameterValueError({
+      parameterName: 'target',
+      reason: `“${TEST_FIXTURES.TARGET_HTML_ID_INVALID}” is not an HTML ID`
+    });
 
     const error1 = t.throws(
       () => injectHTML.default({

@@ -46,13 +46,14 @@ const sendRequest = async ({
   if (
     !utilities.validation.validateType(httpMethod, String)
     || !utilities.validation.validateEnumeration(httpMethod.toUpperCase(), REFERENCE.ENUMERATIONS.HTTP_METHOD)
-  ) throw new Error(
-    `‘httpMethod’ must be { ${
+  ) throw new errors.InvalidParameterValueError({
+    parameterName: 'httpMethod',
+    reason: `must be { ${
       Object.values(REFERENCE.ENUMERATIONS.HTTP_METHOD)
         .map( (__httpMethod) => `“${__httpMethod}”` )
         .join(' | ')
-    } }.`
-  );
+    } }`
+  });
 
   /** the specified HTTP method for the request, coerced to uppercase */
   const _httpMethod = httpMethod.toUpperCase();

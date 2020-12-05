@@ -53,7 +53,7 @@ class HTTPResponseError extends Error {
       : null
     ;
 
-    // define the request url
+    // define the request URL
     if (
       (typeof url !== 'string')
       || (url === '')

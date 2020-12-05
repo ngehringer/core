@@ -1,5 +1,6 @@
 import ava from 'ava';
 
+import * as errors from '../../errors/index.js';
 import PaginationOptions from '../PaginationOptions.js';
 
 
@@ -63,6 +64,11 @@ ava(
 ava(
   'core.infrastructure.PaginationOptions – invalid parameters',
   (test) => {
+    const expectedError1 = new errors.InvalidParameterValueError({
+      parameterName: 'pageSize',
+      reason: 'not a positive integer'
+    });
+
     const error1 = test.throws(
       () => new PaginationOptions({
         pageSize: -1,
@@ -72,8 +78,13 @@ ava(
       })
     );
     test.is(typeof error1, 'object');
-    test.true(error1 instanceof Error);
-    test.is(error1.message, '‘pageSize’ is not a positive integer.');
+    test.true(error1 instanceof errors.InvalidParameterValueError);
+    test.deepEqual(error1, expectedError1);
+
+    const expectedError2 = new errors.InvalidParameterValueError({
+      parameterName: 'startIndex',
+      reason: 'not a positive integer'
+    });
 
     const error2 = test.throws(
       () => new PaginationOptions({
@@ -84,7 +95,7 @@ ava(
       })
     );
     test.is(typeof error2, 'object');
-    test.true(error2 instanceof Error);
-    test.is(error2.message, '‘startIndex’ is not a positive integer.');
+    test.true(error2 instanceof errors.InvalidParameterValueError);
+    test.deepEqual(error2, expectedError2);
   }
 );

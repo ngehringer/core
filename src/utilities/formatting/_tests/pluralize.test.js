@@ -58,7 +58,10 @@ ava(
     test.is(typeof error1, 'object');
     test.deepEqual(error1, expectedError1);
 
-    const expectedError2 = new Error('Invalid “word” parameter value specified: must contain only alphanumeric characters.');
+    const expectedError2 = new errors.InvalidParameterValueError({
+      parameterName: 'word',
+      reason: 'must contain only alphanumeric characters'
+    });
 
     const error2 = test.throws(
       () => pluralize(TEST_FIXTURES.INVALID_WORD)

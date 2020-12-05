@@ -55,20 +55,24 @@ const injectHTML = ({
 
   /** the DOM injection target */
   let targetElement = null;
-  // ‘target’ is a “string” …
+  // `target` is a “string” …
   if ( utilities.validation.isNonEmptyString(target) ) {
-    // … looks like it’s an HTML ID
-    if ( !target.match(/#.*/) ) throw new Error(`“${target}” is not an HTML ID.`);
+    // abort if the specified `target` parameter value does not look like an HTML ID
+    if ( !target.match(/#.*/) ) throw new errors.InvalidParameterValueError({
+      parameterName: 'target',
+      reason: `“${target}” is not an HTML ID`
+    });
+
     targetElement = document.querySelector(`${target}`);
     if (targetElement === null) throw new Error(`“${target}” does not exist.`);
   }
-  // ‘target’ is an “Element”
+  // `target` is an “Element”
   else if ( utilities.validation.validateType(target, Element) ) {
     targetElement = target;
   }
   else throw new errors.TypeValidationError('target', [ String, Element ]);
 
-  // abort if the specified “html” parameter value is not a non-empty string
+  // abort if the specified `html` parameter value is not a non-empty string
   if ( !utilities.validation.isNonEmptyString(html) ) throw new errors.TypeValidationError('html', String);
 
   // inject the response into the DOM by …
