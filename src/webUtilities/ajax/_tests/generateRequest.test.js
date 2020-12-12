@@ -92,7 +92,7 @@ ava(
     t.deepEqual(generateRequest.DEFAULTS.HTTP_HEADERS, []);
     t.is(generateRequest.DEFAULTS.LOGGER, logging.ConsoleLogger);
     t.is(generateRequest.DEFAULTS.PARAMETERS, null);
-    t.is(typeof generateRequest.PROCESS_ID, 'string');
+    t.is(typeof generateRequest.MODULE_ID, 'string');
     t.is(typeof generateRequest.generateRequest, 'function');
     t.is(generateRequest.default, generateRequest.generateRequest);
   }

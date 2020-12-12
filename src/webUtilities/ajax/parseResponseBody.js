@@ -4,16 +4,22 @@ import * as utilities from '../../utilities/index.js';
 import CORE_REFERENCE from '../../REFERENCE/index.js';
 
 
-/** the process’s defaults */
+/**
+ * The module’s defaults
+ */
 const DEFAULTS = Object.freeze({
   DEBUG: false,
   LOGGER: logging.ConsoleLogger
 });
 
-/** the process’s ID */
-const PROCESS_ID = '@backwater-systems/core.webUtilities.ajax.parseResponse';
+/**
+ * The module’s ID
+ */
+const MODULE_ID = '@backwater-systems/core.webUtilities.ajax.parseResponse';
 
-/** the process’s reference data */
+/**
+ * The module’s reference data
+ */
 const REFERENCE = Object.freeze({
   JSON_CONTENT_TYPES: Object.freeze([
     // JSON
@@ -33,13 +39,18 @@ const parseResponse = async ({
   logger = DEFAULTS.LOGGER,
   response
 }) => {
-  /** whether debug mode is enabled (default: disabled) */
+  /**
+   * Whether debug mode is enabled
+   * @default false
+   */
   const _debug = utilities.validation.validateType(debug, Boolean)
     ? debug
     : DEFAULTS.DEBUG
   ;
 
-  /** the process’s logger */
+  /**
+   * The module’s logger
+   */
   const _logger = (
     utilities.validation.validateType(logger, Object)
     && utilities.validation.validateInheritance(logger, logging.BaseLogger)
@@ -53,15 +64,21 @@ const parseResponse = async ({
 
   // attempt to determine the response’s media type
 
-  /** the specified `Response`’s “Content-Type” header value */
+  /**
+   * The “Content-Type” header value of the specified `Response`
+   */
   const contentTypeHeader = response.headers.get('Content-Type');
 
-  /** whether the specified `Response`’s “Content-Type” indicates that it is JSON */
+  /**
+   * Whether the “Content-Type” header of the specified `Response` indicates that it is JSON
+   */
   const isJSON = REFERENCE.JSON_CONTENT_TYPES.some(
     (contentType) => new RegExp(`^${contentType}`).test(contentTypeHeader)
   );
 
-  /** whether the specified `Response`’s “Content-Type” indicates that it is text */
+  /**
+   * Whether the “Content-Type” header of the specified `Response` indicates that it is text
+   */
   const isText = (
     REFERENCE.TEXT_CONTENT_TYPES.some(
       (contentType) => new RegExp(`^${contentType}`).test(contentTypeHeader)
@@ -80,18 +97,22 @@ const parseResponse = async ({
         json: isJSON,
         text: isText
       },
-      sourceID: PROCESS_ID,
+      sourceID: MODULE_ID,
       verbose: _debug
     });
   }
 
-  /** the specified `Response`’s parsed JSON (or null) */
+  /**
+   * The parsed JSON of the specified `Response` (or `null`)
+   */
   const responseJSON = isJSON
     ? await response.json()
     : null
   ;
 
-  /** the specified `Response`’s parsed text (or null) */
+  /**
+   * The parsed text of the specified `Response` (or `null`)
+   */
   const responseText = isText
     ? await response.text()
     : null
@@ -112,7 +133,7 @@ const parseResponse = async ({
           valid: utilities.validation.validateType(responseText, String)
         }
       },
-      sourceID: PROCESS_ID,
+      sourceID: MODULE_ID,
       verbose: _debug
     });
   }
@@ -127,7 +148,7 @@ const parseResponse = async ({
 export default parseResponse;
 export {
   DEFAULTS,
-  PROCESS_ID,
+  MODULE_ID,
   REFERENCE,
   parseResponse
 };

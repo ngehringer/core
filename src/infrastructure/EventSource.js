@@ -18,7 +18,7 @@ class EventSource {
     logger = EventSource.DEFAULTS.LOGGER
   } = {}) {
     /**
-     * Indicates if debug mode is enabled
+     * Whether debug mode is enabled
      * @type {boolean}
      * @default false
      */
@@ -34,7 +34,7 @@ class EventSource {
     this.id = utilities.generateUUID();
 
     /**
-     * The process logger
+     * The module’s logger
      */
     this.logger = (
       utilities.validation.validateType(logger, Function)
@@ -56,10 +56,10 @@ class EventSource {
   }
 
   registerEventHandler(eventType, eventHandler) {
-    // ensure the specified event type is valid
+    // abort if the specified `eventType` parameter value is invalid
     if ( !utilities.validation.isNonEmptyString(eventType) ) throw new errors.TypeValidationError('eventType', String);
 
-    // ensure the specified event handler is valid
+    // abort if the specified `eventHandler` parameter value is invalid
     if ( !utilities.validation.validateType(eventHandler, Function) ) throw new errors.TypeValidationError('eventHandler', Function);
 
     // create the event type’s handler list in the registry, if necessary
@@ -67,7 +67,9 @@ class EventSource {
       this.eventHandlerRegister[eventType] = [];
     }
 
-    // define the specified event type’s handler list
+    /**
+     * The specified event type’s handler list
+     */
     const eventHandlerList = this.eventHandlerRegister[eventType];
 
     // abort if the specified event handler is already registered for the specified event type
@@ -78,9 +80,12 @@ class EventSource {
   }
 
   async sendEvent(eventType, ...rest) {
-    // ensure the specified event type is valid
+    // abort if the specified `eventType` parameter is invalid
     if ( !utilities.validation.isNonEmptyString(eventType) ) throw new errors.TypeValidationError('eventType', String);
 
+    /**
+     * The list of the event handlers registered for the specified event type
+     */
     const eventHandlerList = Array.isArray(this.eventHandlerRegister[eventType])
       ? this.eventHandlerRegister[eventType]
       : []
@@ -108,11 +113,12 @@ class EventSource {
       return;
     }
 
-    // execute the event handlers (serially)
+    // execute the event handlers (serially) …
     for (const eventHandler of eventHandlerList) {
       try {
         await eventHandler(...rest);
       }
+      // … catching and logging any errors that occur during execution
       catch (error) {
         this.logger.logError({
           data: error,
@@ -124,19 +130,23 @@ class EventSource {
   }
 
   unregisterEventHandler(eventType, eventHandler) {
-    // ensure the specified event type is valid
+    // abort if the specified `eventType` parameter value is invalid
     if ( !utilities.validation.isNonEmptyString(eventType) ) throw new errors.TypeValidationError('eventType', String);
 
-    // ensure the specified event handler is valid
+    // abort if the specified `eventHandler` parameter value is invalid
     if ( !utilities.validation.validateType(eventHandler, Function) ) throw new errors.TypeValidationError('eventHandler', Function);
 
-    // define the event type’s handler list from the register
+    /**
+     * The list of the event handlers registered for the specified event type
+     */
     const eventHandlerList = this.eventHandlerRegister[eventType] ?? [];
 
-    // attempt to locate the specified event handler in the register
+    /**
+     * The index of the specified event handler in the register
+     */
     const index = eventHandlerList.indexOf(eventHandler);
 
-    // ensure the specified event handler is registered for the specified event type
+    // abort if the specified event handler is not registered for the specified event type
     if (index === -1) throw new Error(`The specified handler is not registered for “${eventType}” events.`);
 
     // remove the handler from the register for the specified event type

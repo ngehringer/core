@@ -16,10 +16,14 @@ class BaseLogger {
   }
 
   static _logInternalError(error) {
-    // define an ISO 8601–compliant timestamp for the error
+    /**
+     * An ISO 8601–compliant timestamp of when the error occurred
+     */
     const timestamp = new Date().toISOString();
 
-    // extract the stack trace from the error
+    /**
+     * The stack trace of the error
+     */
     const stack = utilities.validation.isNonEmptyString(error.stack)
       ? `\n${error.stack}`
       : ''
@@ -35,11 +39,13 @@ class BaseLogger {
     sourceID = BaseLogger.DEFAULTS.SOURCE_ID,
     verbose = BaseLogger.DEFAULTS.VERBOSE
   }) {
-    // ensure the extending class implements a “_log” function
+    // abort if the extending class does not implement a `_log` function
     if ( !utilities.validation.validateType(this._log, Function) ) throw new errors.ImplementationError('_log', this.CLASS_NAME);
 
     try {
-      // construct a log item with the specified parameters
+      /**
+       * A `LogItem` constructed with the specified parameters
+       */
       const logItem = new LogItem({
         data: data,
         logLevel: logLevel,
@@ -47,7 +53,7 @@ class BaseLogger {
         verbose: verbose
       });
 
-      // invoke the extending class’s “_log” function with the log item as its parameter
+      // invoke the extending class’s `_log` function with the log item as its parameter
       this._log(logItem);
     }
     catch (error) {

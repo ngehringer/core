@@ -6,7 +6,9 @@ import generateRequest from './generateRequest.js';
 import parseResponseBody from './parseResponseBody.js';
 
 
-/** the process’s defaults */
+/**
+ * The module’s defaults
+ */
 const DEFAULTS = Object.freeze({
   DEBUG: false,
   HTTP_HEADERS: [],
@@ -14,12 +16,14 @@ const DEFAULTS = Object.freeze({
   PARAMETERS: null
 });
 
-/** the process’s ID */
-const PROCESS_ID = '@backwater-systems/core.webUtilities.ajax.sendRequest';
+/**
+ * The module’s ID
+ */
+const MODULE_ID = '@backwater-systems/core.webUtilities.ajax.sendRequest';
 
 /**
-  * Executes an HTTP request using the Fetch API.
-  */
+ * Executes an HTTP request using the Fetch API.
+ */
 const sendRequest = async ({
   debug = DEFAULTS.DEBUG,
   httpHeaders = DEFAULTS.HTTP_HEADERS,
@@ -28,13 +32,17 @@ const sendRequest = async ({
   logger = DEFAULTS.LOGGER,
   parameters = DEFAULTS.PARAMETERS
 }) => {
-  /** whether debug mode is enabled */
+  /**
+   * Whether debug mode is enabled
+   */
   const _debug = utilities.validation.validateType(debug, Boolean)
     ? debug
     : DEFAULTS.DEBUG
   ;
 
-  /** the process’s logger */
+  /**
+   * The module’s logger
+   */
   const _logger = (
     utilities.validation.validateType(logger, Object)
     && utilities.validation.validateInheritance(logger, logging.BaseLogger)
@@ -55,10 +63,14 @@ const sendRequest = async ({
     } }`
   });
 
-  /** the specified HTTP method for the request, coerced to uppercase */
+  /**
+   * The specified HTTP method for the request, coerced to uppercase
+   */
   const _httpMethod = httpMethod.toUpperCase();
 
-  /** the Fetch API `Request` */
+  /**
+   * The Fetch API `Request` generated from the specified parameters
+   */
   const request = generateRequest({
     httpHeaders: httpHeaders,
     httpMethod: _httpMethod,
@@ -67,7 +79,9 @@ const sendRequest = async ({
     parameters: parameters
   });
 
-  /** the Fetch API `Response` */
+  /**
+   * The Fetch API `Response` generated from fetching the `Request`
+   */
   const response = await fetch(request);
 
   // in debug mode, log information about the response
@@ -81,7 +95,7 @@ const sendRequest = async ({
           statusReasonPhrase: response.statusText
         }
       },
-      sourceID: PROCESS_ID,
+      sourceID: MODULE_ID,
       verbose: _debug
     });
   }
@@ -95,10 +109,14 @@ const sendRequest = async ({
     url: response.url
   });
 
-  /** whether the `Response` may contain a body */
+  /**
+   * Whether the `Response` may contain a body
+   */
   const responseBodyEnabled = (_httpMethod !== REFERENCE.ENUMERATIONS.HTTP_METHOD.HEAD);
 
-  /** the `Response`’s body, parsed (or null, if it does not contain a body) */
+  /**
+   * The parsed body of `Response` (or `null`, if it does not contain a body)
+   */
   const responseBody = responseBodyEnabled
     ? await parseResponseBody({
       debug: _debug,
@@ -121,6 +139,6 @@ const sendRequest = async ({
 export default sendRequest;
 export {
   DEFAULTS,
-  PROCESS_ID,
+  MODULE_ID,
   sendRequest
 };

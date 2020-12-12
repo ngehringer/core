@@ -2,10 +2,12 @@ class TypeValidationError extends Error {
   constructor(variableName, type, ...rest) {
     super(...rest);
 
-    // define the error’s name
+    /**
+     * The error name
+     */
     this.name = TypeValidationError.name;
 
-    // ensure the specified type parameter is …
+    // abort if the specified type parameter is not …
     if (
       !(
         // … a function, or …
@@ -19,9 +21,11 @@ class TypeValidationError extends Error {
           )
         )
       )
-    ) throw new Error('‘type’ must be an “object”, “function”, or array of { “object” | “function” }.');
+    ) throw new Error('Invalid “type” parameter value specified: must be an “object”, “function”, or array of { “object” | “function” }.');
 
-    // determine the specified variable name
+    /**
+     * The name of the variable that is an invalid type (or `null`)
+     */
     this.variableName = (
       (typeof variableName === 'string')
       && (variableName !== '')
@@ -30,7 +34,9 @@ class TypeValidationError extends Error {
       : null
     ;
 
-    // determine the specified valid type names
+    /**
+     * The list of names of valid types
+     */
     this.typeNameList = (
       Array.isArray(type)
         ? type
@@ -45,10 +51,11 @@ class TypeValidationError extends Error {
         return _type.name;
       }
     );
-  }
 
-  get message() {
-    return `Variable${(this.variableName === null) ? '' : ` “${this.variableName}”`} is not a valid ${this.typeNameList.map( (typeName) => `“${typeName}”` ).join(' | ')}.`;
+    /**
+     * The error name
+     */
+    this.message = `Variable${(this.variableName === null) ? '' : ` “${this.variableName}”`} is not a valid ${this.typeNameList.map( (typeName) => `“${typeName}”` ).join(' | ')}.`;
   }
 }
 

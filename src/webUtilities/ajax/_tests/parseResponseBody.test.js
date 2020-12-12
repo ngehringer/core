@@ -61,7 +61,7 @@ ava(
     t.is(typeof parseResponse.DEFAULTS, 'object');
     t.is(parseResponse.DEFAULTS.DEBUG, false);
     t.is(parseResponse.DEFAULTS.LOGGER, logging.ConsoleLogger);
-    t.is(typeof parseResponse.PROCESS_ID, 'string');
+    t.is(typeof parseResponse.MODULE_ID, 'string');
     t.is(typeof parseResponse.REFERENCE, 'object');
     t.true( Array.isArray(parseResponse.REFERENCE.JSON_CONTENT_TYPES) );
     t.true( Array.isArray(parseResponse.REFERENCE.TEXT_CONTENT_TYPES) );

@@ -1,8 +1,13 @@
+/**
+ * Retrieves a list of key / value pairs from the URI fragment.
+ */
 const getList = () => {
   // return an empty list if the URI fragment is the empty string
   if (window.location.hash.length === 0) return [];
 
-  // construct a list of parameter key / value pairs from the URI fragment
+  /**
+   * A list of parameter key / value pairs from the URI fragment
+   */
   const keyValueList = window.location.hash
     // remove the leading “#” from the URI fragment
     .slice(1)

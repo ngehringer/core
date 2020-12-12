@@ -3,7 +3,9 @@ import * as logging from '../logging/index.js';
 import * as utilities from '../utilities/index.js';
 
 
-/** the process’s defaults */
+/**
+ * The module’s defaults
+ */
 const DEFAULTS = Object.freeze({
   DEBUG: false,
   LOGGER: logging.ConsoleLogger,
@@ -11,13 +13,15 @@ const DEFAULTS = Object.freeze({
   SOURCE_ID: null
 });
 
-/** the process’s ID */
-const PROCESS_ID = '@backwater-systems/core.webUtilities.injectHTML';
+/**
+ * The module’s ID
+ */
+const MODULE_ID = '@backwater-systems/core.webUtilities.injectHTML';
 
 /**
-  * Injects HTML into the specified target, replacing or appending to the contents.
-  * **WARNING:** `<script>` blocks in the HTML are executed; do not inject HTML from untrusted sources.
-  */
+ * Injects HTML into the specified target, replacing or appending to the existing contents.
+ * **WARNING:** `<script>` blocks in the HTML are executed; do not inject HTML from untrusted sources.
+ */
 const injectHTML = ({
   debug = DEFAULTS.DEBUG,
   html,
@@ -26,13 +30,17 @@ const injectHTML = ({
   sourceID = DEFAULTS.SOURCE_ID,
   target
 }) => {
-  /** whether debug mode is enabled */
+  /**
+   * Whether debug mode is enabled
+   */
   const _debug = utilities.validation.validateType(debug, Boolean)
     ? debug
     : DEFAULTS.DEBUG
   ;
 
-  /** the process’s logger */
+  /**
+   * The module’s logger
+   */
   const _logger = (
     utilities.validation.validateType(logger, Object)
     && utilities.validation.validateInheritance(logger, logging.BaseLogger)
@@ -41,19 +49,25 @@ const injectHTML = ({
     : DEFAULTS.LOGGER
   ;
 
-  /** whether the target’s contents should be replaced or appended */
+  /**
+   * Whether the contents of the target should be replaced or appended to
+   */
   const _replace = utilities.validation.validateType(replace, Boolean)
     ? replace
     : DEFAULTS.REPLACE
   ;
 
-  /** the process’s logging source ID */
+  /**
+   * The module’s logging source ID
+   */
   const _sourceID = utilities.validation.isNonEmptyString(sourceID)
-    ? `${PROCESS_ID} @ “${sourceID}”`
-    : PROCESS_ID
+    ? `${MODULE_ID} @ “${sourceID}”`
+    : MODULE_ID
   ;
 
-  /** the DOM injection target */
+  /**
+   * The DOM injection target
+   */
   let targetElement = null;
   // `target` is a “string” …
   if ( utilities.validation.isNonEmptyString(target) ) {
@@ -87,21 +101,30 @@ const injectHTML = ({
 
   // attempt to execute any JavaScript <script> nodes contained in the HTML
 
-  /** a transient DOM element for extracting the text of the `<script>` nodes contained in the HTML */
+  /**
+   * A transient DOM element for extracting the text of the `<script>` nodes contained in the HTML
+   */
   const htmlElement = document.createElement('div');
   // populate the transient element with the response’s HTML
   htmlElement.innerHTML = html;
 
-  /** the `<script>` nodes contained in the HTML */
+  /**
+   * The `<script>` nodes contained in the HTML
+   */
   const scriptNodeList = Array.from(
     htmlElement.querySelectorAll('script')
   );
 
-  /** the text of the `<script>` nodes contained in the HTML */
+  /**
+   * The text of the `<script>` nodes contained in the HTML
+   */
   const scriptTextList = scriptNodeList
     // filter out scripts that are empty or all whitespace
     .filter(
       (scriptNode, index) => {
+        /**
+         * The text of the `<script>` node
+         */
         const scriptText = scriptNode.textContent;
 
         if (_debug) {
@@ -112,7 +135,9 @@ const injectHTML = ({
           });
         }
 
-        /** whether the script is valid (negated – RegExp match: empty or contains only whitespace characters) */
+        /**
+         * Whether the script is valid (negated – RegExp match: empty or contains only whitespace characters)
+         */
         const validScript = !(/^\s*$/).test(scriptText);
 
         if (!validScript) {
@@ -166,6 +191,6 @@ const injectHTML = ({
 export default injectHTML;
 export {
   DEFAULTS,
-  PROCESS_ID,
+  MODULE_ID,
   injectHTML
 };

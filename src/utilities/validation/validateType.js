@@ -1,6 +1,9 @@
 import * as errors from '../../errors/index.js';
 
 
+/**
+ * Determines whether the `instance` parameter is an instance of the `type` parameter.
+ */
 const validateType = (instance, type) => {
   if (typeof type !== 'function') throw new errors.TypeValidationError('type', Function);
 

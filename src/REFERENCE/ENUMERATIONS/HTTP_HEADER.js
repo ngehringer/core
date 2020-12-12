@@ -1,3 +1,6 @@
+/**
+ * HTTP header reference data
+ */
 const HTTP_HEADER = Object.freeze({
   ACCESS_CONTROL_ALLOW_ORIGIN: 'Access-Control-Allow-Origin',
   AUTHORIZATION: 'Authorization',

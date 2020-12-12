@@ -3,14 +3,26 @@ import * as utilities from '../../utilities/index.js';
 import getList from './getList.js';
 
 
+/**
+ * Retrieves the value of the specified `key` from the URI fragment (or `null`).
+ */
 const getValue = (key) => {
+  // abort if the specified `key` parameter is invalid
   if ( !utilities.validation.isNonEmptyString(key, String) ) throw new errors.TypeValidationError('key', String);
 
-  // get a list of the URI fragment’s parameters as key / value pairs
+  /**
+   * A list of parameter key / value pairs from the URI fragment
+   */
   const keyValueList = getList();
-  // extract the first parameter that matches the specified key, if any
+
+  /**
+   * The first parameter matching the specified key, if any
+   */
   const parameter = keyValueList.find( (_parameter) => (_parameter.key === key) );
-  // extract the parameter’s value
+
+  /**
+   * The value of the first parameter matching the specified key (or `null`)
+   */
   const parameterValue = utilities.validation.validateType(parameter, Object)
     ? parameter.value
     : null

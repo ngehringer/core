@@ -146,7 +146,7 @@ ava(
     t.deepEqual(sendRequest.DEFAULTS.HTTP_HEADERS, []);
     t.is(sendRequest.DEFAULTS.LOGGER, logging.ConsoleLogger);
     t.is(sendRequest.DEFAULTS.PARAMETERS, null);
-    t.is(typeof sendRequest.PROCESS_ID, 'string');
+    t.is(typeof sendRequest.MODULE_ID, 'string');
     t.is(typeof sendRequest.sendRequest, 'function');
     t.is(sendRequest.default, sendRequest.sendRequest);
   }

@@ -11,10 +11,14 @@ class HTTPResponseError extends Error {
   ) {
     super(...rest);
 
-    // define the error name
+    /**
+     * The error name
+     */
     this.name = HTTPResponseError.name;
 
-    // define the HTTP method
+    /**
+     * The HTTP method of the request
+     */
     this.method = (
       (typeof method === 'string')
       && (method !== '')
@@ -23,7 +27,9 @@ class HTTPResponseError extends Error {
       : null
     ;
 
-    // define the HTTP response
+    /**
+     * The HTTP response
+     */
     this.response = (
       (typeof response === 'object')
       && (
@@ -35,16 +41,22 @@ class HTTPResponseError extends Error {
       : null
     ;
 
-    // define the HTTP status code of the response
+    // abort if the specified `statusCode` parameter value is invalid
     if (
       (typeof statusCode !== 'number')
       || !Number.isInteger(statusCode)
       || (statusCode < 100)
       || (statusCode > 599)
     ) throw new Error('Invalid “statusCode” parameter value specified: must be an integer between 100 and 599.');
+
+    /**
+     * The HTTP status code of the response
+     */
     this.statusCode = statusCode;
 
-    // define the HTTP status reason phrase of the response
+    /**
+     * The HTTP status reason phrase of the response (or `null`)
+     */
     this.statusReasonPhrase = (
       (typeof statusReasonPhrase === 'string')
       && (statusReasonPhrase !== '')
@@ -53,16 +65,21 @@ class HTTPResponseError extends Error {
       : null
     ;
 
-    // define the request URL
+    // abort if the specified `url` parameter value is invalid
     if (
       (typeof url !== 'string')
       || (url === '')
     ) throw new Error('Invalid “url” parameter value specified.');
-    this.url = url;
-  }
 
-  get message() {
-    return `Error fetching ${
+    /**
+     * The URL of the request
+     */
+    this.url = url;
+
+    /**
+     * The error message
+     */
+    this.message = `Error fetching ${
       (this.method === null)
         ? ''
         : `(${this.method}) `

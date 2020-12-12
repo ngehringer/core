@@ -1,3 +1,6 @@
+/**
+ * HTTP method reference data
+ */
 const HTTP_METHOD = Object.freeze({
   DELETE: 'DELETE',
   GET: 'GET',

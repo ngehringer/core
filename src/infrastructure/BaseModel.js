@@ -6,27 +6,37 @@ class BaseModel {
   static get CLASS_NAME() { return `@backwater-systems/core.infrastructure.${BaseModel.name}`; }
 
   constructor({ data }) {
-    // ensure the extending class implements a “getModel” function
+    // abort if the extending class does not implement a `getModel` function
     if ( !utilities.validation.validateType(this.getModel, Function) ) throw new errors.ImplementationError('getModel', this.constructor.CLASS_NAME);
 
-    // generate a unique ID for the model
+    /**
+     * A unique ID for the model
+     */
     this.id = utilities.generateUUID();
 
     this.setData(data);
   }
 
   setData(data) {
-    // ensure the model’s source data is valid
+    // abort if the specified `data` parameter is not an object
     if ( !utilities.validation.validateType(data, Object) ) throw new errors.TypeValidationError('data', Object);
 
+    /**
+     * The model’s source data
+     */
     this.data = data;
 
-    // evaluate the model from its source data
+    /**
+     * The model evaluated from the source data
+     */
     const model = this.getModel(data);
 
-    // ensure the model evaluated to an object
+    // abort if the model did not evaluate to an object
     if ( !utilities.validation.validateType(model, Object) ) throw new errors.TypeValidationError('model', Object);
 
+    /**
+     * The model evaluated from the source data
+     */
     this.model = model;
   }
 }

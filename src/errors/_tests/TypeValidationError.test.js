@@ -53,7 +53,7 @@ ava(
     const error = test.throws(
       () => new TypeValidationError(TEST_FIXTURES.VARIABLE_NAME)
     );
-    test.is(error.message, '‘type’ must be an “object”, “function”, or array of { “object” | “function” }.');
+    test.is(error.message, 'Invalid “type” parameter value specified: must be an “object”, “function”, or array of { “object” | “function” }.');
 
     const typeValidationError = new TypeValidationError(null, TEST_FIXTURES.TYPE);
 

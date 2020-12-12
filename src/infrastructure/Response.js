@@ -49,10 +49,20 @@ class Response {
     message = Response.DEFAULTS.MESSAGE,
     status = Response.DEFAULTS.STATUS
   }) {
+    /**
+     * A unique ID for the response
+     */
     this.id = utilities.generateUUID();
+
+    /**
+     * The time the response was generated
+     */
     this.time = new Date();
 
     if ( utilities.validation.validateType(message, Error) ) {
+      /**
+       * The message of the response
+       */
       this.message = message.message;
     }
     else if ( utilities.validation.validateType(message, String) ) {
@@ -62,6 +72,9 @@ class Response {
       this.message = Response.DEFAULTS.MESSAGE;
     }
 
+    /**
+     * The status of the response
+     */
     this.status = utilities.validation.validateEnumeration(status, Response.REFERENCE.ENUMERATIONS.RESPONSE_STATUS)
       ? status
       : Response.DEFAULTS.STATUS

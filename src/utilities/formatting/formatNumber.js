@@ -3,6 +3,9 @@ import * as validation from '../validation/index.js';
 import REFERENCE from '../../REFERENCE/index.js';
 
 
+/**
+ * Formats the specified `number` parameter as a `string`.
+ */
 const formatNumber = (number) => {
   if (number === null) return REFERENCE.NULL_PLACEHOLDER;
 

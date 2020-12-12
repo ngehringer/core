@@ -32,6 +32,9 @@ class PaginationOptions {
     startIndex
   }) {
     if ( utilities.validation.isNumber(pageSize) ) {
+      /**
+       * The `pageSize` parameter coerced to a `Number`
+       */
       const _pageSize = Number(pageSize);
       if (
         !Number.isInteger(_pageSize)
@@ -41,17 +44,26 @@ class PaginationOptions {
         reason: 'not a positive integer'
       });
 
+      /**
+       * The number of items per page of data
+       */
       this.pageSize = _pageSize;
     }
     else {
       this.pageSize = PaginationOptions.DEFAULTS.PAGE_SIZE;
     }
 
+    /**
+     * The name of the column that the data is sorted by
+     */
     this.sortColumn = utilities.validation.isNonEmptyString(sortColumn)
       ? sortColumn
       : PaginationOptions.DEFAULTS.SORT_COLUMN
     ;
 
+    /**
+     * The order that the data is sorted by (“ascending” or “descending”)
+     */
     this.sortOrder = (
       utilities.validation.validateType(sortOrder, String)
       && utilities.validation.validateEnumeration(sortOrder.toLowerCase(), PaginationOptions.REFERENCE.ENUMERATIONS.SORT_ORDER)
@@ -61,6 +73,9 @@ class PaginationOptions {
     ;
 
     if ( utilities.validation.isNumber(startIndex) ) {
+      /**
+       * The `startIndex` parameter coerced to a `Number`
+       */
       const _startIndex = Number(startIndex);
       if (
         !Number.isInteger(_startIndex)
@@ -70,19 +85,26 @@ class PaginationOptions {
         reason: 'not a positive integer'
       });
 
+      /**
+       * The index of the first item of data
+       */
       this.startIndex = _startIndex;
     }
     else {
       this.startIndex = PaginationOptions.DEFAULTS.START_INDEX;
     }
 
-    // indicate if the parameters necessary to perform paging were provided
+    /**
+     * Whether the parameters necessary to perform paging were specified
+     */
     this.pagingEnabled = (
       (this.pageSize !== null)
       && (this.startIndex !== null)
     );
 
-    // indicate if the parameters necessary to perform sorting were provided
+    /**
+     * Whether the parameters necessary to perform sorting were specified
+     */
     this.sortingEnabled = (
       (this.sortColumn !== null)
       && (this.sortOrder !== null)

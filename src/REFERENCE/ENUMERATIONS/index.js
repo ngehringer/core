@@ -5,6 +5,9 @@ import HTTP_STATUS_CODE from './HTTP_STATUS_CODE.js';
 import MEDIA_TYPE from './MEDIA_TYPE.js';
 
 
+/**
+ * Enumeration reference data
+ */
 const ENUMERATIONS = Object.freeze({
   ENVIRONMENT: ENVIRONMENT,
   HTTP_HEADER: HTTP_HEADER,

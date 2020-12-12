@@ -1,6 +1,9 @@
 import ENUMERATIONS from './ENUMERATIONS/index.js';
 
 
+/**
+ * Reference data for `core`
+ */
 const REFERENCE = Object.freeze({
   ENUMERATIONS: ENUMERATIONS,
   NULL_PLACEHOLDER: '—',

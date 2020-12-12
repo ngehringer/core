@@ -2,9 +2,14 @@ class ImplementationError extends Error {
   constructor(propertyName, className, ...rest) {
     super(...rest);
 
-    // define the error’s name
+    /**
+     * The error name
+     */
     this.name = ImplementationError.name;
 
+    /**
+     * The name of the class (or `null`)
+     */
     this.className = (
       (typeof className === 'string')
       && (className !== '')
@@ -13,6 +18,9 @@ class ImplementationError extends Error {
       : null
     ;
 
+    /**
+     * The name of the unimplemented property (or `null`)
+     */
     this.propertyName = (
       (typeof propertyName === 'string')
       && (propertyName !== '')
@@ -20,10 +28,11 @@ class ImplementationError extends Error {
       ? propertyName
       : null
     ;
-  }
 
-  get message() {
-    return `Class${(this.className === null) ? '' : ` “${this.className}”`} does not implement ${(this.propertyName === null) ? 'a required' : `the required “${this.propertyName}”`} property.`;
+    /**
+     * The error message
+     */
+    this.message = `Class${(this.className === null) ? '' : ` “${this.className}”`} does not implement ${(this.propertyName === null) ? 'a required' : `the required “${this.propertyName}”`} property.`;
   }
 }
 

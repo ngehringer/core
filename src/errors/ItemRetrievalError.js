@@ -8,10 +8,14 @@ class ItemRetrievalError extends Error {
   ) {
     super(...rest);
 
-    // define the error’s name
+    /**
+     * The error name
+     */
     this.name = ItemRetrievalError.name;
 
-    // define the collection’s name
+    /**
+     * The name of the item collection
+     */
     this.collectionName = (
       (typeof collectionName === 'string')
       && (collectionName !== '')
@@ -20,7 +24,9 @@ class ItemRetrievalError extends Error {
       : null
     ;
 
-    // define the item’s name
+    /**
+     * The name of the item that could not be retrieved
+     */
     this.itemName = (
       (typeof itemName === 'string')
       && (itemName !== '')
@@ -28,10 +34,11 @@ class ItemRetrievalError extends Error {
       ? itemName
       : null
     ;
-  }
 
-  get message() {
-    return `Could not retrieve the item${
+    /**
+     * The error message
+     */
+    this.message = `Could not retrieve the item${
       (this.itemName === null)
         ? ''
         : ` “${this.itemName}”`

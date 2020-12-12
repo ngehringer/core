@@ -3,21 +3,26 @@ import * as validation from '../validation/index.js';
 import pluralizeDictionary from './pluralize.dictionary.js';
 
 
+/**
+ * Pluralizes the specified `word` parameter, given an optional numeric `count`.
+ */
 const pluralize = (word, count) => {
-  // abort if the specified ‘word’ parameter is not a string
+  // abort if the specified `word` parameter is not a string
   if ( !validation.validateType(word, String) ) throw new errors.TypeValidationError('word', String);
 
-  // abort if the specified ‘word’ parameter is not entirely composed of alphanumeric (/\w/) characters
+  // abort if the specified `word` parameter is not entirely composed of alphanumeric (/\w/) characters
   if ( !(/^\w+$/).test(word) ) throw new errors.InvalidParameterValueError({
     parameterName: 'word',
     reason: 'must contain only alphanumeric characters'
   });
 
-  // define the plurality count …
+  /**
+   * The plurality count
+   */
   const _count = validation.isNumber(count)
-    // … by coercing the specified ‘count’ parameter into an absolute numeric value, …
+    // if the specified `count` parameter is a number, get its absolute value; …
     ? Math.abs(count)
-    // … pluralizing by default if it is unspecified or invalid
+    // … otherwise, pluralize by default
     : 2
   ;
 

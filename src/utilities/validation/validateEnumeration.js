@@ -2,6 +2,9 @@ import * as errors from '../../errors/index.js';
 import validateType from './validateType.js';
 
 
+/**
+ * Determines whether the specified `value` parameter is contained in the specified `enumeration` parameter.
+ */
 const validateEnumeration = (value, enumeration) => {
   // abort if the specified enumeration is not an object
   if ( !validateType(enumeration, Object) ) throw new errors.TypeValidationError('enumeration', Object);

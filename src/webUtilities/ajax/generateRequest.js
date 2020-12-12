@@ -5,7 +5,9 @@ import REFERENCE from '../../REFERENCE/index.js';
 import generateQueryString from './generateQueryString.js';
 
 
-/** the process’s defaults */
+/**
+ * The module’s defaults
+ */
 const DEFAULTS = Object.freeze({
   DEBUG: false,
   HTTP_HEADERS: [],
@@ -13,12 +15,14 @@ const DEFAULTS = Object.freeze({
   PARAMETERS: null
 });
 
-/** the process’s ID */
-const PROCESS_ID = '@backwater-systems/core.webUtilities.ajax.generateRequest';
+/**
+ * The module’s ID
+ */
+const MODULE_ID = '@backwater-systems/core.webUtilities.ajax.generateRequest';
 
 /**
-  * Generates a Fetch API `Request`.
-  */
+ * Generates a Fetch API `Request`.
+ */
 const generateRequest = ({
   debug = DEFAULTS.DEBUG,
   httpHeaders = DEFAULTS.HTTP_HEADERS,
@@ -27,13 +31,18 @@ const generateRequest = ({
   logger = DEFAULTS.LOGGER,
   parameters = DEFAULTS.PARAMETERS
 }) => {
-  /** whether debug mode is enabled (default: false) */
+  /**
+   * Whether debug mode is enabled
+   * @default false
+   */
   const _debug = utilities.validation.validateType(debug, Boolean)
     ? debug
     : DEFAULTS.DEBUG
   ;
 
-  /** the process’s logger */
+  /**
+   * The module’s logger
+   */
   const _logger = (
     utilities.validation.validateType(logger, Object)
     && utilities.validation.validateInheritance(logger, logging.BaseLogger)
@@ -48,7 +57,9 @@ const generateRequest = ({
   // abort if the specified “location” parameter is not a non-empty string
   if ( !utilities.validation.isNonEmptyString(location) ) throw new errors.TypeValidationError('location', String);
 
-  /** the `Request`’s HTTP headers, sanitized */
+  /**
+   * The sanitized HTTP headers constructed from the `httpHeaders` parameter
+   */
   const _httpHeaders = Array.isArray(httpHeaders)
     // remove any items that are not a [ string, string ] tuple
     ? httpHeaders.filter(
@@ -61,26 +72,36 @@ const generateRequest = ({
     : DEFAULTS.HTTP_HEADERS
   ;
 
-  /** the `Request`’s `Headers` */
+  /**
+   * The generated Fetch API `Headers` for the `Request`
+   */
   const headers = new Headers(_httpHeaders);
 
-  // determine if the request should encode its parameters in a query string or the request body
+  /**
+   * Whether the request should encode its parameters in a query string or the request body
+   */
   const queryStringEnabled = (
     (httpMethod === REFERENCE.ENUMERATIONS.HTTP_METHOD.GET)
     || (httpMethod === REFERENCE.ENUMERATIONS.HTTP_METHOD.HEAD)
   );
 
-  /** the `Request`’s location (URI) */
+  /**
+   * The location (URI) of the `Request`
+   */
   let _location;
 
-  /** the `Request`’s body */
+  /**
+   * The body of the `Request`
+   */
   let body;
 
   // if request parameters were specified …
   if ( utilities.validation.validateType(parameters, Object) ) {
     // … and query string mode is enabled …
     if (queryStringEnabled) {
-      /** the specified parameters encoded as a query string */
+      /**
+       * A query string encoding the specified parameters
+       */
       const queryString = generateQueryString(parameters);
       // … encode the parameters as a query string appended to the location …
       _location = utilities.validation.isNonEmptyString(queryString) ? `${location}?${queryString}` : location;
@@ -121,12 +142,14 @@ const generateRequest = ({
           parameters: parameters
         }
       },
-      sourceID: PROCESS_ID,
+      sourceID: MODULE_ID,
       verbose: _debug
     });
   }
 
-  /** the generated Fetch API `Request` */
+  /**
+   * The generated Fetch API `Request`
+   */
   const request = new Request(
     _location,
     {
@@ -143,6 +166,6 @@ const generateRequest = ({
 export default generateRequest;
 export {
   DEFAULTS,
-  PROCESS_ID,
+  MODULE_ID,
   generateRequest
 };

@@ -42,7 +42,7 @@ ava(
     t.is(injectHTML.DEFAULTS.LOGGER, logging.ConsoleLogger);
     t.is(injectHTML.DEFAULTS.REPLACE, false);
     t.is(injectHTML.DEFAULTS.SOURCE_ID, null);
-    t.is(typeof injectHTML.PROCESS_ID, 'string');
+    t.is(typeof injectHTML.MODULE_ID, 'string');
     t.is(typeof injectHTML.injectHTML, 'function');
     t.is(injectHTML.default, injectHTML.injectHTML);
   }

@@ -1,3 +1,6 @@
+/**
+ * IANA media type reference data
+ */
 const MEDIA_TYPE = Object.freeze({
   HTML: 'text/html',
   JSON: 'application/json'

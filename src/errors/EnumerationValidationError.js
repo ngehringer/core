@@ -2,10 +2,14 @@ class EnumerationValidationError extends Error {
   constructor(valueName, enumerationName, ...rest) {
     super(...rest);
 
-    // define the error’s name
+    /**
+     * The error name
+     */
     this.name = EnumerationValidationError.name;
 
-    // define the enumeration’s name
+    /**
+     * The enumeration’s name
+     */
     this.enumerationName = (
       (typeof enumerationName === 'string')
       && (enumerationName !== '')
@@ -14,7 +18,9 @@ class EnumerationValidationError extends Error {
       : null
     ;
 
-    // define the value’s name
+    /**
+     * The invalid value’s name
+     */
     this.valueName = (
       (typeof valueName === 'string')
       && (valueName !== '')
@@ -22,10 +28,11 @@ class EnumerationValidationError extends Error {
       ? valueName
       : null
     ;
-  }
 
-  get message() {
-    return `The specified${(this.valueName === null) ? '' : ` “${this.valueName}”`} value is an invalid${(this.enumerationName === null) ? '' : ` “${this.enumerationName}”`} enumeration item.`;
+    /**
+     * The error message
+     */
+    this.message = `The specified${(this.valueName === null) ? '' : ` “${this.valueName}”`} value is an invalid${(this.enumerationName === null) ? '' : ` “${this.enumerationName}”`} enumeration item.`;
   }
 }
 

@@ -2,13 +2,15 @@ import * as errors from '../../errors/index.js';
 import * as utilities from '../../utilities/index.js';
 
 /**
-  * Generates an HTTP query string (not including the “?” prefix) from the specified `parameters` object.
-  */
+ * Generates an HTTP query string (not including the “?” prefix) from the specified `parameters` object.
+ */
 const generateQueryString = (parameters) => {
   // abort if the specified `parameters` parameter is not an object
   if ( !utilities.validation.validateType(parameters, Object) ) throw new errors.TypeValidationError('parameters', Object);
 
-  /** the query string generated from the specified parameters */
+  /**
+   * The query string generated from the specified parameters
+   */
   const queryString = Object.entries(parameters)
     // filter the list to only parameters where …
     .filter(
