@@ -41,30 +41,39 @@ class LogItem {
     /**
      * The source ID of the log item
      */
-    this.sourceID = utilities.validation.isNonEmptyString(sourceID)
+    this.sourceID = (
+      (typeof sourceID === 'string')
+      && utilities.validation.isNonEmptyString(sourceID)
+    )
       ? sourceID
       : null
     ;
 
     // define the log message – depending on the type of the logged data – as …
     // … string: itself
-    if ( utilities.validation.validateType(data, String) ) {
+    if (typeof data === 'string') {
       /**
        * The message of the log item
        */
       this.message = data;
     }
     // … Error: …
-    else if ( utilities.validation.validateType(data, Error) ) {
+    else if (
+      (typeof data === 'object')
+      && (data instanceof Error)
+    ) {
       this.message = verbose
         // … (verbose) the error type name, message, and stack trace
-        ? `(${data.name}) ${data.message}${utilities.validation.isNonEmptyString(data.stack) ? `\n${data.stack}` : ''}`
+        ? `(${data.name}) ${data.message}${( (typeof data.stack === 'string') && utilities.validation.isNonEmptyString(data.stack) ) ? `\n${data.stack}` : ''}`
         // … (non-verbose) the error message
         : `${data.message}`
       ;
     }
     // … object: stringified JSON of the object
-    else if ( utilities.validation.validateType(data, Object) ) {
+    else if (
+      (typeof data === 'object')
+      && (data !== null)
+    ) {
       this.message = JSON.stringify(data);
     }
     else {

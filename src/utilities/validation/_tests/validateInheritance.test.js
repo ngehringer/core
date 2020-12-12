@@ -33,7 +33,7 @@ ava(
 ava(
   'core.utilities.validation.validateInheritance – invalid parameters',
   (test) => {
-    const expectedError1 = new errors.TypeValidationError('parent', Object);
+    const expectedError1 = new errors.TypeValidationError('parent', [ Function, Object ]);
 
     const error1 = test.throws(
       () => validateInheritance(TEST_FIXTURES.CHILD)
@@ -42,7 +42,7 @@ ava(
     test.is(typeof error1, 'object');
     test.deepEqual(error1, expectedError1);
 
-    const expectedError2 = new errors.TypeValidationError('child', Object);
+    const expectedError2 = new errors.TypeValidationError('child', [ Function, Object ]);
 
     const error2 = test.throws(
       () => validateInheritance(undefined, TEST_FIXTURES.PARENT)

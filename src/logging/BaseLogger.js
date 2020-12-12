@@ -24,7 +24,10 @@ class BaseLogger {
     /**
      * The stack trace of the error
      */
-    const stack = utilities.validation.isNonEmptyString(error.stack)
+    const stack = (
+      (typeof error.stack === 'string')
+      && utilities.validation.isNonEmptyString(error.stack)
+    )
       ? `\n${error.stack}`
       : ''
     ;
@@ -40,7 +43,7 @@ class BaseLogger {
     verbose = BaseLogger.DEFAULTS.VERBOSE
   }) {
     // abort if the extending class does not implement a `_log` function
-    if ( !utilities.validation.validateType(this._log, Function) ) throw new errors.ImplementationError('_log', this.CLASS_NAME);
+    if (typeof this._log !== 'function') throw new errors.ImplementationError('_log', this.CLASS_NAME);
 
     try {
       /**

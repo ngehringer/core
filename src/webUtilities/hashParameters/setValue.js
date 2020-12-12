@@ -7,10 +7,13 @@ import getList from './getList.js';
  * Serializes the key / value pairs in the specified `keyValueDictionary` into the URI fragment.
  */
 const setValue = (keyValueDictionary) => {
-  // abort if the specified list of parameters is not …
+  // abort if the specified `keyValueDictionary` parameter value is not …
   if (
     // … an object …
-    !utilities.validation.validateType(keyValueDictionary, Object)
+    (
+      (typeof keyValueDictionary !== 'object')
+      || (keyValueDictionary === null)
+    )
     // … where every …
     || !Object.entries(keyValueDictionary).every(
       ([ key, value ]) => (
@@ -40,7 +43,7 @@ const setValue = (keyValueDictionary) => {
     const parameter = keyValueList.find( (_parameter) => (_parameter.key === key) );
 
     // if a parameter with the specified key already exists, and …
-    if ( utilities.validation.validateType(parameter, Object) ) {
+    if (typeof parameter === 'object') {
       // … the specified value is `null`, remove the parameter …
       if (value === null) {
         keyValueList.splice(keyValueList.indexOf(parameter), 1);

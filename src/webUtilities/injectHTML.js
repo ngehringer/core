@@ -33,7 +33,7 @@ const injectHTML = ({
   /**
    * Whether debug mode is enabled
    */
-  const _debug = utilities.validation.validateType(debug, Boolean)
+  const _debug = (typeof debug === 'boolean')
     ? debug
     : DEFAULTS.DEBUG
   ;
@@ -42,7 +42,7 @@ const injectHTML = ({
    * The module’s logger
    */
   const _logger = (
-    utilities.validation.validateType(logger, Object)
+    (typeof logger === 'function')
     && utilities.validation.validateInheritance(logger, logging.BaseLogger)
   )
     ? logger
@@ -52,15 +52,18 @@ const injectHTML = ({
   /**
    * Whether the contents of the target should be replaced or appended to
    */
-  const _replace = utilities.validation.validateType(replace, Boolean)
+  const _replace = (typeof replace === 'boolean')
     ? replace
     : DEFAULTS.REPLACE
   ;
 
   /**
-   * The module’s logging source ID
+   * The logging source ID
    */
-  const _sourceID = utilities.validation.isNonEmptyString(sourceID)
+  const _sourceID = (
+    (typeof sourceID === 'string')
+    && utilities.validation.isNonEmptyString(sourceID)
+  )
     ? `${MODULE_ID} @ “${sourceID}”`
     : MODULE_ID
   ;
@@ -70,7 +73,10 @@ const injectHTML = ({
    */
   let targetElement = null;
   // `target` is a “string” …
-  if ( utilities.validation.isNonEmptyString(target) ) {
+  if (
+    (typeof target === 'string')
+    && utilities.validation.isNonEmptyString(target)
+  ) {
     // abort if the specified `target` parameter value does not look like an HTML ID
     if ( !target.match(/#.*/) ) throw new errors.InvalidParameterValueError({
       parameterName: 'target',
@@ -81,13 +87,19 @@ const injectHTML = ({
     if (targetElement === null) throw new Error(`“${target}” does not exist.`);
   }
   // `target` is an “Element”
-  else if ( utilities.validation.validateType(target, Element) ) {
+  else if (
+    (typeof target === 'object')
+    && (target instanceof Element)
+  ) {
     targetElement = target;
   }
   else throw new errors.TypeValidationError('target', [ String, Element ]);
 
   // abort if the specified `html` parameter value is not a non-empty string
-  if ( !utilities.validation.isNonEmptyString(html) ) throw new errors.TypeValidationError('html', String);
+  if (
+    (typeof html !== 'string')
+    || !utilities.validation.isNonEmptyString(html)
+  ) throw new errors.TypeValidationError('html', String);
 
   // inject the response into the DOM by …
   // … replacing the contents of the target element

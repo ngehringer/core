@@ -35,7 +35,7 @@ const sendRequest = async ({
   /**
    * Whether debug mode is enabled
    */
-  const _debug = utilities.validation.validateType(debug, Boolean)
+  const _debug = (typeof debug === 'boolean')
     ? debug
     : DEFAULTS.DEBUG
   ;
@@ -44,15 +44,16 @@ const sendRequest = async ({
    * The module’s logger
    */
   const _logger = (
-    utilities.validation.validateType(logger, Object)
+    (typeof logger === 'function')
     && utilities.validation.validateInheritance(logger, logging.BaseLogger)
   )
     ? logger
     : DEFAULTS.LOGGER
   ;
 
+  // abort if the specified `httpMethod` parameter value is invalid
   if (
-    !utilities.validation.validateType(httpMethod, String)
+    (typeof httpMethod !== 'string')
     || !utilities.validation.validateEnumeration(httpMethod.toUpperCase(), REFERENCE.ENUMERATIONS.HTTP_METHOD)
   ) throw new errors.InvalidParameterValueError({
     parameterName: 'httpMethod',

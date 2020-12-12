@@ -7,12 +7,18 @@ class BaseFactory {
 
   static get typeRegister() {
     // abort if the extending factory does not implement a `_baseType` property
-    if ( !utilities.validation.validateType(this._baseType, Function) ) throw new errors.ImplementationError('_baseType', this.CLASS_NAME);
+    if (typeof this._baseType !== 'function') throw new errors.ImplementationError('_baseType', this.CLASS_NAME);
 
     // initialize the type register cache, if necessary
-    if ( !utilities.validation.validateType(this._typeRegister, Object) ) {
+    if (
+      (typeof this._typeRegister !== 'object')
+      || (this._typeRegister === null)
+    ) {
       // seed the type register cache with the extending class’s “_initialTypeRegister” property, if it is valid …
-      if ( utilities.validation.validateType(this._initialTypeRegister, Object) ) {
+      if (
+        (typeof this._initialTypeRegister === 'object')
+        && (this._initialTypeRegister !== null)
+      ) {
         /**
          * The list of the names of the initially-registered types that do not extend the factory’s base type
          */
@@ -59,11 +65,14 @@ class BaseFactory {
   }
 
   static create(typeName, ...rest) {
-    // abort if the specified `typeName` parameter is invalid
-    if ( !utilities.validation.isNonEmptyString(typeName) ) throw new errors.TypeValidationError('typeName', String);
+    // abort if the specified `typeName` parameter value is invalid
+    if (
+      (typeof typeName !== 'string')
+      || !utilities.validation.isNonEmptyString(typeName)
+    ) throw new errors.TypeValidationError('typeName', String);
 
     /**
-     * The specified type’s class
+     * The class of the specified type
      */
     const Type = this._getType(typeName);
 
@@ -80,13 +89,16 @@ class BaseFactory {
 
   static registerType(typeName, typeClass) {
     // abort if the extending factory does not implement a `_baseType` property
-    if ( !utilities.validation.validateType(this._baseType, Function) ) throw new errors.ImplementationError('_baseType', this.CLASS_NAME);
+    if (typeof this._baseType !== 'function') throw new errors.ImplementationError('_baseType', this.CLASS_NAME);
 
-    // abort if the specified `typeName` parameter is invalid
-    if ( !utilities.validation.isNonEmptyString(typeName) ) throw new errors.TypeValidationError('typeName', String);
+    // abort if the specified `typeName` parameter value is invalid
+    if (
+      (typeof typeName !== 'string')
+      || !utilities.validation.isNonEmptyString(typeName)
+    ) throw new errors.TypeValidationError('typeName', String);
 
-    // abort if the specified `typeClass` parameter is invalid
-    if ( !utilities.validation.validateType(typeClass, Function) ) throw new errors.TypeValidationError('typeClass', Function);
+    // abort if the specified `typeClass` parameter value is invalid
+    if (typeof typeClass !== 'function') throw new errors.TypeValidationError('typeClass', Function);
 
     // abort if the specified class does not extend the factory’s base type
     if ( !utilities.validation.validateInheritance(typeClass, this._baseType) ) throw new errors.TypeValidationError('typeClass', this._baseType);
@@ -102,8 +114,11 @@ class BaseFactory {
   }
 
   static unregisterType(typeName) {
-    // abort if the specified `typeName` parameter is invalid
-    if ( !utilities.validation.isNonEmptyString(typeName) ) throw new errors.TypeValidationError('typeName', String);
+    // abort if the specified `typeName` parameter value is invalid
+    if (
+      (typeof typeName !== 'string')
+      || !utilities.validation.isNonEmptyString(typeName)
+    ) throw new errors.TypeValidationError('typeName', String);
 
     /**
      * The type retrieved from the type registry

@@ -35,6 +35,6 @@ ava(
   (test) => {
     const number = convertToNumber(TEST_FIXTURES.NON_NUMERIC_STRING);
 
-    test.is(number, null);
+    test.is(number, Number.NaN);
   }
 );

@@ -59,13 +59,16 @@ class Response {
      */
     this.time = new Date();
 
-    if ( utilities.validation.validateType(message, Error) ) {
+    if (
+      (typeof message === 'object')
+      && (message instanceof Error)
+    ) {
       /**
        * The message of the response
        */
       this.message = message.message;
     }
-    else if ( utilities.validation.validateType(message, String) ) {
+    else if (typeof message === 'string') {
       this.message = message;
     }
     else {

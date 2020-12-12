@@ -43,7 +43,7 @@ const parseResponse = async ({
    * Whether debug mode is enabled
    * @default false
    */
-  const _debug = utilities.validation.validateType(debug, Boolean)
+  const _debug = (typeof debug === 'boolean')
     ? debug
     : DEFAULTS.DEBUG
   ;
@@ -52,15 +52,18 @@ const parseResponse = async ({
    * The module’s logger
    */
   const _logger = (
-    utilities.validation.validateType(logger, Object)
+    (typeof logger === 'function')
     && utilities.validation.validateInheritance(logger, logging.BaseLogger)
   )
     ? logger
     : DEFAULTS.LOGGER
   ;
 
-  // abort if the the specified `response` parameter is not a `Response` object
-  if ( !utilities.validation.validateType(response, Response) ) throw new errors.TypeValidationError('response', Response);
+  // abort if the the specified `response` parameter value is not a `Response` object
+  if (
+    (typeof response !== 'object')
+    || !(response instanceof Response)
+  ) throw new errors.TypeValidationError('response', Response);
 
   // attempt to determine the response’s media type
 
@@ -125,12 +128,16 @@ const parseResponse = async ({
         contentType: contentTypeHeader,
         json: {
           parsed: isJSON,
-          valid: utilities.validation.validateType(responseJSON, Object)
+          type: (responseJSON === null)
+            ? 'null'
+            : typeof responseJSON
         },
         text: {
           byteCount: (responseText === null) ? null : responseText.length,
           parsed: isText,
-          valid: utilities.validation.validateType(responseText, String)
+          type: (responseText === null)
+            ? 'null'
+            : typeof responseText
         }
       },
       sourceID: MODULE_ID,

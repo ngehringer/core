@@ -19,17 +19,15 @@ class EventSource {
   } = {}) {
     /**
      * Whether debug mode is enabled
-     * @type {boolean}
      * @default false
      */
-    this.debug = utilities.validation.validateType(debug, Boolean)
+    this.debug = (typeof debug === 'boolean')
       ? debug
       : EventSource.DEFAULTS.DEBUG
     ;
 
     /**
      * A UUID that identifies this event source
-     * @type {string}
      */
     this.id = utilities.generateUUID();
 
@@ -37,7 +35,7 @@ class EventSource {
      * The module’s logger
      */
     this.logger = (
-      utilities.validation.validateType(logger, Function)
+      (typeof logger === 'function')
       && utilities.validation.validateInheritance(logger, logging.BaseLogger)
     )
       ? logger
@@ -46,7 +44,6 @@ class EventSource {
 
     /**
      * A dictionary of registered event handlers (key: event type name; value: event handler function list)
-     * @type {Object}
      */
     this.eventHandlerRegister = {};
   }
@@ -57,10 +54,13 @@ class EventSource {
 
   registerEventHandler(eventType, eventHandler) {
     // abort if the specified `eventType` parameter value is invalid
-    if ( !utilities.validation.isNonEmptyString(eventType) ) throw new errors.TypeValidationError('eventType', String);
+    if (
+      (typeof eventType !== 'string')
+      || !utilities.validation.isNonEmptyString(eventType)
+    ) throw new errors.TypeValidationError('eventType', String);
 
     // abort if the specified `eventHandler` parameter value is invalid
-    if ( !utilities.validation.validateType(eventHandler, Function) ) throw new errors.TypeValidationError('eventHandler', Function);
+    if (typeof eventHandler !== 'function') throw new errors.TypeValidationError('eventHandler', Function);
 
     // create the event type’s handler list in the registry, if necessary
     if ( !Array.isArray(this.eventHandlerRegister[eventType]) ) {
@@ -80,8 +80,11 @@ class EventSource {
   }
 
   async sendEvent(eventType, ...rest) {
-    // abort if the specified `eventType` parameter is invalid
-    if ( !utilities.validation.isNonEmptyString(eventType) ) throw new errors.TypeValidationError('eventType', String);
+    // abort if the specified `eventType` parameter value is invalid
+    if (
+      (typeof eventType !== 'string')
+      || !utilities.validation.isNonEmptyString(eventType)
+    ) throw new errors.TypeValidationError('eventType', String);
 
     /**
      * The list of the event handlers registered for the specified event type
@@ -131,10 +134,13 @@ class EventSource {
 
   unregisterEventHandler(eventType, eventHandler) {
     // abort if the specified `eventType` parameter value is invalid
-    if ( !utilities.validation.isNonEmptyString(eventType) ) throw new errors.TypeValidationError('eventType', String);
+    if (
+      (typeof eventType !== 'string')
+      || !utilities.validation.isNonEmptyString(eventType)
+    ) throw new errors.TypeValidationError('eventType', String);
 
     // abort if the specified `eventHandler` parameter value is invalid
-    if ( !utilities.validation.validateType(eventHandler, Function) ) throw new errors.TypeValidationError('eventHandler', Function);
+    if (typeof eventHandler !== 'function') throw new errors.TypeValidationError('eventHandler', Function);
 
     /**
      * The list of the event handlers registered for the specified event type

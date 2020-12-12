@@ -32,10 +32,7 @@ class HTTPResponseError extends Error {
      */
     this.response = (
       (typeof response === 'object')
-      && (
-        (typeof Response === 'function')
-        && (response instanceof Response)
-      )
+      && (response instanceof Response)
     )
       ? response
       : null

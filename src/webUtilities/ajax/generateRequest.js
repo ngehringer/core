@@ -35,7 +35,7 @@ const generateRequest = ({
    * Whether debug mode is enabled
    * @default false
    */
-  const _debug = utilities.validation.validateType(debug, Boolean)
+  const _debug = (typeof debug === 'boolean')
     ? debug
     : DEFAULTS.DEBUG
   ;
@@ -44,18 +44,21 @@ const generateRequest = ({
    * The module’s logger
    */
   const _logger = (
-    utilities.validation.validateType(logger, Object)
+    (typeof logger === 'function')
     && utilities.validation.validateInheritance(logger, logging.BaseLogger)
   )
     ? logger
     : DEFAULTS.LOGGER
   ;
 
-  // abort if the specified “httpMethod” parameter is not a valid HTTP method
+  // abort if the specified `httpMethod` parameter value is not a valid HTTP method
   if ( !utilities.validation.validateEnumeration(httpMethod, REFERENCE.ENUMERATIONS.HTTP_METHOD) ) throw new errors.EnumerationValidationError('httpMethod', 'HTTP method');
 
-  // abort if the specified “location” parameter is not a non-empty string
-  if ( !utilities.validation.isNonEmptyString(location) ) throw new errors.TypeValidationError('location', String);
+  // abort if the specified `location` parameter value is not a non-empty string
+  if (
+    (typeof location !== 'string')
+    || !utilities.validation.isNonEmptyString(location)
+  ) throw new errors.TypeValidationError('location', String);
 
   /**
    * The sanitized HTTP headers constructed from the `httpHeaders` parameter
@@ -96,7 +99,10 @@ const generateRequest = ({
   let body;
 
   // if request parameters were specified …
-  if ( utilities.validation.validateType(parameters, Object) ) {
+  if (
+    (typeof parameters === 'object')
+    && (parameters !== null)
+  ) {
     // … and query string mode is enabled …
     if (queryStringEnabled) {
       /**

@@ -31,11 +31,14 @@ class PaginationOptions {
     sortOrder,
     startIndex
   }) {
-    if ( utilities.validation.isNumber(pageSize) ) {
+    if (
+      (typeof pageSize === 'number')
+      || (typeof pageSize === 'string')
+    ) {
       /**
        * The `pageSize` parameter coerced to a `Number`
        */
-      const _pageSize = Number(pageSize);
+      const _pageSize = utilities.conversion.convertToNumber(pageSize);
       if (
         !Number.isInteger(_pageSize)
         || (_pageSize < 1)
@@ -56,7 +59,10 @@ class PaginationOptions {
     /**
      * The name of the column that the data is sorted by
      */
-    this.sortColumn = utilities.validation.isNonEmptyString(sortColumn)
+    this.sortColumn = (
+      (typeof sortColumn === 'string')
+      && utilities.validation.isNonEmptyString(sortColumn)
+    )
       ? sortColumn
       : PaginationOptions.DEFAULTS.SORT_COLUMN
     ;
@@ -65,18 +71,21 @@ class PaginationOptions {
      * The order that the data is sorted by (“ascending” or “descending”)
      */
     this.sortOrder = (
-      utilities.validation.validateType(sortOrder, String)
+      (typeof sortOrder === 'string')
       && utilities.validation.validateEnumeration(sortOrder.toLowerCase(), PaginationOptions.REFERENCE.ENUMERATIONS.SORT_ORDER)
     )
       ? sortOrder.toLowerCase()
       : PaginationOptions.DEFAULTS.SORT_ORDER
     ;
 
-    if ( utilities.validation.isNumber(startIndex) ) {
+    if (
+      (typeof startIndex === 'number')
+      || (typeof startIndex === 'string')
+    ) {
       /**
        * The `startIndex` parameter coerced to a `Number`
        */
-      const _startIndex = Number(startIndex);
+      const _startIndex = utilities.conversion.convertToNumber(startIndex);
       if (
         !Number.isInteger(_startIndex)
         || (_startIndex < 0)
