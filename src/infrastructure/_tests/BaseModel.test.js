@@ -7,99 +7,68 @@ import BaseModel from '../BaseModel.js';
 
 
 const TEST_FIXTURES = Object.freeze({
-  DATA: {},
-  INVALID_DATA: { invalid: true }
+  PARAMETERS: Object.freeze({
+    DATA: {}
+  })
 });
 
 const getTestModel = ({
   getModelFake
 }) => class TestModel extends BaseModel {
-  getModel(data) {
-    return (typeof getModelFake === 'function')
-      ? getModelFake(data)
-      : { ...data }
-    ;
+  get model() {
+    getModelFake?.();
+
+    return super.model;
   }
 };
 
 ava(
   'core.infrastructure.BaseModel – static data',
-  (test) => {
-    test.is(typeof BaseModel.CLASS_NAME, 'string');
+  (t) => {
+    t.is(typeof BaseModel.CLASS_NAME, 'string');
   }
 );
 
 ava(
   'core.infrastructure.BaseModel',
-  (test) => {
-    const getModelFake = sinon.fake(
-      (data) => ({ ...data })
-    );
+  (t) => {
+    const getModelFake = sinon.fake();
 
     const TestModel = getTestModel({
       getModelFake: getModelFake
     });
 
-    const model = new TestModel({
-      data: TEST_FIXTURES.DATA
-    });
+    const model = new TestModel({ data: TEST_FIXTURES.PARAMETERS.DATA });
 
-    test.is(model.data, TEST_FIXTURES.DATA);
-    test.true( REFERENCE.UUID_REGEXP.test(model.id) );
-    test.deepEqual(model.model, TEST_FIXTURES.DATA);
-    test.is(getModelFake.callCount, 1);
-    test.true( getModelFake.calledWithExactly(TEST_FIXTURES.DATA) );
+    t.is(model.data, TEST_FIXTURES.PARAMETERS.DATA);
+    t.true( REFERENCE.UUID_REGEXP.test(model.id) );
+    t.deepEqual(model.model, TEST_FIXTURES.PARAMETERS.DATA);
+    t.is(getModelFake.callCount, 1);
   }
 );
 
 ava(
-  'core.infrastructure.BaseModel – unimplemented “getModel” function',
-  (test) => {
-    const TestModel = class extends BaseModel {};
-
-    const expectedError = new errors.ImplementationError('getModel', TestModel.CLASS_NAME);
-
-    const error = test.throws(
-      () => new TestModel({
-        data: TEST_FIXTURES.DATA
-      })
-    );
-    test.is(typeof error, 'object');
-    test.deepEqual(error, expectedError);
-  }
-);
-
-ava(
-  'core.infrastructure.BaseModel.setData – errors',
-  (test) => {
-    const getModelFake = sinon.fake(
-      (data) => (
-        (data === TEST_FIXTURES.INVALID_DATA)
-          ? null
-          : { ...data }
-      )
-    );
-
-    const TestModel = getTestModel({
-      getModelFake: getModelFake
-    });
-
-    const testModel = new TestModel({ data: TEST_FIXTURES.DATA });
+  'core.infrastructure.BaseModel – errors',
+  (t) => {
+    const TestModel = getTestModel({});
 
     const expectedError1 = new errors.TypeValidationError('data', Object);
 
-    const error1 = test.throws(
-      () => testModel.setData()
+    const error1 = t.throws(
+      () => new TestModel({ data: null })
     );
-    test.is(typeof error1, 'object');
-    test.deepEqual(error1, expectedError1);
+    t.is(typeof error1, 'object');
+    t.deepEqual(error1, expectedError1);
 
-    const expectedError2 = new errors.TypeValidationError('model', Object);
+    const expectedError2 = new TypeError(`Cannot set property ${'model'} of #<${TestModel.name}> which has only a getter`);
 
-    const error2 = test.throws(
-      () => testModel.setData(TEST_FIXTURES.INVALID_DATA)
+    const error2 = t.throws(
+      () => {
+        const testModel = new TestModel({ data: TEST_FIXTURES.PARAMETERS.DATA });
+        testModel.model = null;
+      }
     );
-    test.is(typeof error2, 'object');
-    test.deepEqual(error2, expectedError2);
+    t.is(typeof error2, 'object');
+    t.deepEqual(error2, expectedError2);
   }
 );

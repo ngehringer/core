@@ -6,29 +6,31 @@ import BaseViewModel from '../BaseViewModel.js';
 
 
 const TEST_FIXTURES = Object.freeze({
-  DATA: {}
+  PARAMETERS: Object.freeze({
+    DATA: {}
+  })
 });
 
 const getTestViewModel = ({
   getModelFake
 }) => class TestViewModel extends BaseViewModel {
-  getModel(data) {
-    getModelFake?.(data);
+  get model() {
+    getModelFake?.();
 
-    return { ...data };
+    return super.model;
   }
 };
 
 ava(
   'core.infrastructure.BaseViewModel – static data',
-  (test) => {
-    test.is(typeof BaseViewModel.CLASS_NAME, 'string');
+  (t) => {
+    t.is(typeof BaseViewModel.CLASS_NAME, 'string');
   }
 );
 
 ava(
   'core.infrastructure.BaseViewModel',
-  (test) => {
+  (t) => {
     const getModelFake = sinon.fake();
 
     const TestViewModel = getTestViewModel({
@@ -36,13 +38,12 @@ ava(
     });
 
     const viewModel = new TestViewModel({
-      data: TEST_FIXTURES.DATA
+      data: TEST_FIXTURES.PARAMETERS.DATA
     });
 
-    test.is(viewModel.data, TEST_FIXTURES.DATA);
-    test.true( REFERENCE.UUID_REGEXP.test(viewModel.id) );
-    test.deepEqual(viewModel.model, TEST_FIXTURES.DATA);
-    test.is(getModelFake.callCount, 1);
-    test.true( getModelFake.calledWithExactly(TEST_FIXTURES.DATA) );
+    t.is(viewModel.data, TEST_FIXTURES.PARAMETERS.DATA);
+    t.true( REFERENCE.UUID_REGEXP.test(viewModel.id) );
+    t.deepEqual(viewModel.model, TEST_FIXTURES.PARAMETERS.DATA);
+    t.is(getModelFake.callCount, 1);
   }
 );

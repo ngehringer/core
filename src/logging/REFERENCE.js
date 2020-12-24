@@ -1,3 +1,6 @@
+/**
+ * `core.logging` reference data
+ */
 const REFERENCE = Object.freeze({
   ENUMERATIONS: Object.freeze({
     LOG_LEVEL: Object.freeze({

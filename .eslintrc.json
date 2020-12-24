@@ -21,9 +21,7 @@
         "array-callback-return": "error",
         "array-element-newline": [
             "error",
-            {
-                "multiline": true
-            }
+            "consistent"
         ],
         "arrow-body-style": "error",
         "arrow-parens": [
