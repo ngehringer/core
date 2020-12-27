@@ -76,6 +76,13 @@ A web browser–hosted runtime library
         - #### `getValue`
         - #### `setValue`
 
+    - ### IndexedDB (`core.webUtilities.indexedDB`)
+
+        - #### `deleteDatabase`
+        - #### `executeRequest`
+        - #### `openDatabase`
+        - #### `openTransaction`
+
     - #### `injectHTML`
 
 - ### Reference Data (`core.REFERENCE`)
