@@ -6,10 +6,10 @@ import generateUUID from '../generateUUID.js';
 
 ava(
   'core.utilities.generateUUID',
-  (test) => {
+  (t) => {
     const uuid = generateUUID();
 
-    test.is(typeof uuid, 'string');
-    test.true( REFERENCE.UUID_REGEXP.test(uuid) );
+    t.is(typeof uuid, 'string');
+    t.true( REFERENCE.UUID_REGEXP.test(uuid) );
   }
 );

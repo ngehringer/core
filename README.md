@@ -52,6 +52,7 @@ A web browser–hosted runtime library
         - #### `validateInheritance`
         - #### `validateType`
 
+    - #### `delay`
     - #### `generateUUID`
 
 - ### Web Utilities (`core.webUtilities`)
