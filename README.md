@@ -60,12 +60,12 @@ A web browser–hosted runtime library
     - ### Ajax (`core.webUtilities.ajax`)
 
         - #### `delete`
+        - #### `extractResponseBody`
         - #### `generateQueryString`
         - #### `generateRequest`
         - #### `get`
         - #### `head`
         - #### `options`
-        - #### `parseResponseBody`
         - #### `patch`
         - #### `post`
         - #### `put`

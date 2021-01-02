@@ -2,8 +2,8 @@ import * as errors from '../../errors/index.js';
 import * as logging from '../../logging/index.js';
 import * as utilities from '../../utilities/index.js';
 import REFERENCE from '../../REFERENCE/index.js';
+import extractResponseBody from './extractResponseBody.js';
 import generateRequest from './generateRequest.js';
-import parseResponseBody from './parseResponseBody.js';
 
 
 /**
@@ -116,10 +116,10 @@ const sendRequest = async ({
   const responseBodyEnabled = (_httpMethod !== REFERENCE.ENUMERATIONS.HTTP_METHOD.HEAD);
 
   /**
-   * The parsed body of `Response` (or `null`, if it does not contain a body)
+   * The body of the `Response` (or `null`, if it does not contain a body)
    */
   const responseBody = responseBodyEnabled
-    ? await parseResponseBody({
+    ? await extractResponseBody({
       debug: _debug,
       logger: _logger,
       response: response

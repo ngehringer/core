@@ -28,6 +28,7 @@ const TEST_FIXTURES = Object.freeze({
         }
       ),
       responseBody: {
+        arrayBuffer: null,
         json: null,
         text: ''
       },
@@ -69,6 +70,7 @@ const TEST_FIXTURES = Object.freeze({
         }
       ),
       responseBody: {
+        arrayBuffer: null,
         json: {
           response_parameter: 'response_value'
         },
@@ -169,6 +171,7 @@ ava(
     t.true(response.response instanceof nodeFetch.Response);
     t.is(typeof response.responseBody, 'object');
     t.not(response.responseBody, null);
+    t.is(response.responseBody.arrayBuffer, null);
     t.is(response.responseBody.json, null);
     t.is(typeof response.responseBody.text, 'string');
     t.is(typeof response.statusCode, 'number');
@@ -194,6 +197,7 @@ ava(
     t.true(response.response instanceof nodeFetch.Response);
     t.is(typeof response.responseBody, 'object');
     t.not(response.responseBody, null);
+    t.is(response.responseBody.arrayBuffer, null);
     t.is(typeof response.responseBody.json, 'object');
     t.is(response.responseBody.text, null);
     t.is(typeof response.statusCode, 'number');
@@ -225,6 +229,7 @@ ava(
     );
 
     t.is(typeof error, 'object');
+    t.true(error instanceof errors.HTTPResponseError);
     t.deepEqual(error, expectedError);
   }
 );
@@ -249,6 +254,7 @@ ava(
     );
 
     t.is(typeof error1, 'object');
+    t.true(error1 instanceof errors.InvalidParameterValueError);
     t.deepEqual(error1, expectedError1);
   }
 );

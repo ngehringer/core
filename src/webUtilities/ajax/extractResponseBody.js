@@ -15,26 +15,42 @@ const DEFAULTS = Object.freeze({
 /**
  * The module’s ID
  */
-const MODULE_ID = '@backwater-systems/core.webUtilities.ajax.parseResponse';
+const MODULE_ID = '@backwater-systems/core.webUtilities.ajax.extractResponseBody';
 
 /**
  * The module’s reference data
  */
 const REFERENCE = Object.freeze({
-  JSON_CONTENT_TYPES: Object.freeze([
-    // JSON
-    CORE_REFERENCE.ENUMERATIONS.MEDIA_TYPE.JSON
-  ]),
-  TEXT_CONTENT_TYPES: Object.freeze([
-    // HTML
-    CORE_REFERENCE.ENUMERATIONS.MEDIA_TYPE.HTML
-  ])
+  CONTENT_TYPES: Object.freeze({
+    ARRAY_BUFFER: Object.freeze([
+      // application/octet-stream
+      CORE_REFERENCE.ENUMERATIONS.MEDIA_TYPE.OCTET_STREAM
+    ]),
+    JSON: Object.freeze([
+      // `application/json`
+      CORE_REFERENCE.ENUMERATIONS.MEDIA_TYPE.JSON
+    ]),
+    TEXT: Object.freeze([
+      // `text/css`
+      CORE_REFERENCE.ENUMERATIONS.MEDIA_TYPE.CSS,
+      // `text/csv`
+      CORE_REFERENCE.ENUMERATIONS.MEDIA_TYPE.CSV,
+      // `text/javascript`
+      CORE_REFERENCE.ENUMERATIONS.MEDIA_TYPE.JAVASCRIPT,
+      // `text/html`
+      CORE_REFERENCE.ENUMERATIONS.MEDIA_TYPE.HTML,
+      // `text/plain`
+      CORE_REFERENCE.ENUMERATIONS.MEDIA_TYPE.TEXT,
+      // `application/xml`
+      CORE_REFERENCE.ENUMERATIONS.MEDIA_TYPE.XML
+    ])
+  })
 });
 
 /**
-  * Parses the body of a Fetch API `Response` into an object containing one non-null property – `json` or `text` – depending on the specified `Response`’s “Content-Type”.
-  */
-const parseResponse = async ({
+ * Extracts the body of a Fetch API `Response` into an object containing one non-null property – `arrayBuffer`, `json`, or `text` – depending on the specified `Response`’s “Content-Type” HTTP header.
+ */
+const extractResponseBody = async ({
   debug = DEFAULTS.DEBUG,
   logger = DEFAULTS.LOGGER,
   response
@@ -75,20 +91,28 @@ const parseResponse = async ({
   /**
    * Whether the “Content-Type” header of the specified `Response` indicates that it is JSON
    */
-  const isJSON = REFERENCE.JSON_CONTENT_TYPES.some(
+  const isJSON = REFERENCE.CONTENT_TYPES.JSON.some(
     (contentType) => new RegExp(`^${contentType}`).test(contentTypeHeader)
   );
 
   /**
    * Whether the “Content-Type” header of the specified `Response` indicates that it is text
    */
-  const isText = (
-    REFERENCE.TEXT_CONTENT_TYPES.some(
+  const isText = REFERENCE.CONTENT_TYPES.TEXT.some(
+    (contentType) => new RegExp(`^${contentType}`).test(contentTypeHeader)
+  );
+
+  /**
+   * Whether the “Content-Type” header of the specified `Response` indicates that it is an `ArrayBuffer`
+   */
+  const isArrayBuffer = (
+    REFERENCE.CONTENT_TYPES.ARRAY_BUFFER.some(
       (contentType) => new RegExp(`^${contentType}`).test(contentTypeHeader)
     )
-    // include everything that isn’t JSON
+    // include everything that isn’t JSON or text
     || (
       !isJSON
+      && !isText
     )
   );
 
@@ -96,8 +120,10 @@ const parseResponse = async ({
   if (_debug) {
     _logger.logDebug({
       data: {
+        arrayBuffer: isArrayBuffer,
         contentType: contentTypeHeader,
         json: isJSON,
+        responseBodyUsed: response.bodyUsed,
         text: isText
       },
       sourceID: MODULE_ID,
@@ -106,17 +132,25 @@ const parseResponse = async ({
   }
 
   /**
-   * The parsed JSON of the specified `Response` (or `null`)
+   * The `ArrayBuffer` of the specified `Response` body (or `null`)
    */
-  const responseJSON = isJSON
+  const arrayBuffer = isArrayBuffer
+    ? await response.arrayBuffer()
+    : null
+  ;
+
+  /**
+   * The parsed JSON of the specified `Response` body (or `null`)
+   */
+  const json = isJSON
     ? await response.json()
     : null
   ;
 
   /**
-   * The parsed text of the specified `Response` (or `null`)
+   * The text of the specified `Response` body (or `null`)
    */
-  const responseText = isText
+  const text = isText
     ? await response.text()
     : null
   ;
@@ -125,19 +159,18 @@ const parseResponse = async ({
   if (_debug) {
     _logger.logDebug({
       data: {
+        arrayBuffer: {
+          byteCount: arrayBuffer?.byteLength ?? null,
+          extracted: isArrayBuffer
+        },
         contentType: contentTypeHeader,
         json: {
-          parsed: isJSON,
-          type: (responseJSON === null)
-            ? 'null'
-            : typeof responseJSON
+          byteCount: (json === null) ? null : JSON.stringify(json).length,
+          extracted: isJSON
         },
         text: {
-          byteCount: (responseText === null) ? null : responseText.length,
-          parsed: isText,
-          type: (responseText === null)
-            ? 'null'
-            : typeof responseText
+          byteCount: text?.length ?? null,
+          extracted: isText
         }
       },
       sourceID: MODULE_ID,
@@ -146,16 +179,17 @@ const parseResponse = async ({
   }
 
   return {
-    json: responseJSON,
-    text: responseText
+    arrayBuffer: arrayBuffer,
+    json: json,
+    text: text
   };
 };
 
 
-export default parseResponse;
+export default extractResponseBody;
 export {
   DEFAULTS,
   MODULE_ID,
   REFERENCE,
-  parseResponse
+  extractResponseBody
 };
