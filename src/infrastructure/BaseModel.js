@@ -5,20 +5,37 @@ import * as utilities from '../utilities/index.js';
 class BaseModel {
   static get CLASS_NAME() { return `@backwater-systems/core.infrastructure.${BaseModel.name}`; }
 
-  constructor({ data }) {
+  static get DEFAULTS() {
+    return Object.freeze({
+      id: utilities.generateUUID
+    });
+  }
+
+  constructor({
+    data,
+    id = BaseModel.DEFAULTS.id()
+  }) {
     // abort if the specified `data` parameter value is not an object
     if (
       (typeof data !== 'object')
       || (data === null)
     ) throw new errors.TypeValidationError('data', Object);
 
-    /** The (cached) source data for the model */
+    /**
+     * The source data for the model
+     */
     this.data = data;
 
     /**
      * A unique ID for the model
      */
-    this.id = utilities.generateUUID();
+    this.id = (
+      (typeof id === 'string')
+      && ( utilities.validation.isNonEmptyString(id) )
+    )
+      ? id
+      : BaseModel.DEFAULTS.id()
+    ;
   }
 
   /**

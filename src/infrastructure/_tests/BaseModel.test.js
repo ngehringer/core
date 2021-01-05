@@ -8,7 +8,8 @@ import BaseModel from '../BaseModel.js';
 
 const TEST_FIXTURES = Object.freeze({
   PARAMETERS: Object.freeze({
-    DATA: {}
+    DATA: {},
+    ID: 'TestModel'
   })
 });
 
@@ -26,6 +27,8 @@ ava(
   'core.infrastructure.BaseModel – static data',
   (t) => {
     t.is(typeof BaseModel.CLASS_NAME, 'string');
+    t.is(typeof BaseModel.DEFAULTS, 'object');
+    t.is(typeof BaseModel.DEFAULTS.id, 'function');
   }
 );
 
@@ -38,12 +41,25 @@ ava(
       getModelFake: getModelFake
     });
 
-    const model = new TestModel({ data: TEST_FIXTURES.PARAMETERS.DATA });
+    const model1 = new TestModel({
+      data: TEST_FIXTURES.PARAMETERS.DATA,
+      id: TEST_FIXTURES.PARAMETERS.ID
+    });
 
-    t.is(model.data, TEST_FIXTURES.PARAMETERS.DATA);
-    t.true( REFERENCE.UUID_REGEXP.test(model.id) );
-    t.deepEqual(model.model, TEST_FIXTURES.PARAMETERS.DATA);
+    t.is(model1.data, TEST_FIXTURES.PARAMETERS.DATA);
+    t.is(model1.id, TEST_FIXTURES.PARAMETERS.ID);
+    t.deepEqual(model1.model, TEST_FIXTURES.PARAMETERS.DATA);
     t.is(getModelFake.callCount, 1);
+
+    const model2 = new TestModel({
+      data: TEST_FIXTURES.PARAMETERS.DATA,
+      id: null
+    });
+
+    t.is(model2.data, TEST_FIXTURES.PARAMETERS.DATA);
+    t.true( REFERENCE.UUID_REGEXP.test(model2.id) );
+    t.deepEqual(model2.model, TEST_FIXTURES.PARAMETERS.DATA);
+    t.is(getModelFake.callCount, 2);
   }
 );
 

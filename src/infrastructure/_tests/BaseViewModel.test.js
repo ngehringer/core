@@ -25,6 +25,8 @@ ava(
   'core.infrastructure.BaseViewModel – static data',
   (t) => {
     t.is(typeof BaseViewModel.CLASS_NAME, 'string');
+    t.is(typeof BaseViewModel.DEFAULTS, 'object');
+    t.is(typeof BaseViewModel.DEFAULTS.id, 'function');
   }
 );
 
