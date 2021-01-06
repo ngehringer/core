@@ -42,7 +42,7 @@ class BaseModel {
    * The model evaluated from the source data
    */
   get model() {
-    return { ...this.data };
+    return utilities.deepCopy(this.data);
   }
 }
 

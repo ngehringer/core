@@ -8,6 +8,8 @@ ava(
   (test) => {
     test.is(typeof utilities, 'object');
     test.is(typeof utilities.conversion, 'object');
+    test.is(typeof utilities.deepCopy, 'function');
+    test.is(typeof utilities.delay, 'function');
     test.is(typeof utilities.formatting, 'object');
     test.is(typeof utilities.generateUUID, 'function');
     test.is(typeof utilities.validation, 'object');
