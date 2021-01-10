@@ -46,6 +46,7 @@ A web browser–hosted runtime library
 
     - ### Validation (`core.utilities.validation`)
 
+        - #### `isDate`
         - #### `isNonEmptyString`
         - #### `isNumber`
         - #### `validateEnumeration`
