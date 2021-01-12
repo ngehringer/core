@@ -7,6 +7,11 @@ ava(
   'core.webUtilities.indexedDB.REFERENCE',
   (test) => {
     test.is(typeof REFERENCE, 'object');
+    test.is(typeof REFERENCE.ENUMERATIONS.CURSOR_DIRECTIONS, 'object');
+    test.is(typeof REFERENCE.ENUMERATIONS.CURSOR_DIRECTIONS.NEXT, 'string');
+    test.is(typeof REFERENCE.ENUMERATIONS.CURSOR_DIRECTIONS.NEXTUNIQUE, 'string');
+    test.is(typeof REFERENCE.ENUMERATIONS.CURSOR_DIRECTIONS.PREV, 'string');
+    test.is(typeof REFERENCE.ENUMERATIONS.CURSOR_DIRECTIONS.PREVUNIQUE, 'string');
     test.is(typeof REFERENCE.ENUMERATIONS.EVENT_TYPES, 'object');
     test.is(typeof REFERENCE.ENUMERATIONS.EVENT_TYPES.DATABASE, 'object');
     test.is(typeof REFERENCE.ENUMERATIONS.EVENT_TYPES.DATABASE.ABORT, 'string');

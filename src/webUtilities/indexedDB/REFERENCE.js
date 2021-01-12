@@ -3,6 +3,12 @@
  */
 const REFERENCE = Object.freeze({
   ENUMERATIONS: Object.freeze({
+    CURSOR_DIRECTIONS: Object.freeze({
+      NEXT: 'next',
+      NEXTUNIQUE: 'nextunique',
+      PREV: 'prev',
+      PREVUNIQUE: 'prevunique'
+    }),
     EVENT_TYPES: Object.freeze({
       DATABASE: Object.freeze({
         ABORT: 'abort',

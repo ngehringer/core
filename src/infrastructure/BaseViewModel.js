@@ -6,7 +6,7 @@ class BaseViewModel extends BaseModel {
 
   static get DEFAULTS() {
     return Object.freeze({
-      id: BaseModel.DEFAULTS.id
+      ...BaseModel.DEFAULTS
     });
   }
 
